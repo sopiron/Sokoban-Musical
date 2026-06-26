@@ -190,10 +190,6 @@ public class MenuPrincipalView extends JFrame {
                     altoBoton
             );
 
-            /*
-             * El GIF mide 220 x 260.
-             * Se deja ese tamaño para que Swing no lo recorte.
-             */
             int anchoPersonaje = 320;
             int altoPersonaje = 390;
 
