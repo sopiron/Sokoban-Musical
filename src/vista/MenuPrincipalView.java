@@ -1,5 +1,8 @@
 package vista;
 import javax.swing.*;
+
+import controller.JuegoController;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -10,7 +13,7 @@ public class MenuPrincipalView extends JFrame {
     private JButton btnJugar;
     private JButton btnSalir;
 
-    public MenuPrincipalView() {
+    public MenuPrincipalView(JuegoController controller) {
         setTitle("Sokoban Musical");
 
         // Tamaño inicial proporcionado al fondo horizontal
@@ -37,6 +40,8 @@ public class MenuPrincipalView extends JFrame {
         fondo.configurarBotones(btnJugar, btnSalir);
 
         setContentPane(fondo);
+
+        configurarEventos(controller);
     }
 
     public JButton getBtnJugar() {
@@ -204,6 +209,28 @@ public class MenuPrincipalView extends JFrame {
             );
         }
     }
+
+    private void configurarEventos(JuegoController controller) {
+    btnJugar.addActionListener(e -> {
+        controller.iniciarJuego();
+
+        JuegoPanel panelJuego = new JuegoPanel(controller);
+
+        JFrame ventanaJuego = new JFrame("Sokoban Musical - Jugando");
+        ventanaJuego.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ventanaJuego.setMinimumSize(new Dimension(1000, 700));
+        ventanaJuego.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        ventanaJuego.setLocationRelativeTo(null);
+        ventanaJuego.add(panelJuego);
+
+        dispose();
+
+        ventanaJuego.setVisible(true);
+        panelJuego.requestFocusInWindow();
+    });
+
+    btnSalir.addActionListener(e -> System.exit(0));
+}
 
 
     private static class BotonRedondeado extends JButton {

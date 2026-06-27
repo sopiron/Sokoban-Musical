@@ -1,48 +1,130 @@
 package controller;
 
+import modelo.Caja;
+import modelo.Destino;
+import modelo.GestorNiveles;
+import modelo.NivelFactory;
+import modelo.NivelRockFactory;
+import modelo.Pared;
 import modelo.Tablero;
-import vista.JuegoPanel;
-import javax.swing.JOptionPane;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import util.NivelLoader;
+import views.ObjetoView;
 
-public class JuegoController implements KeyListener {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+public class JuegoController{
 
     private Tablero tablero;
-    private JuegoPanel panel;
+    private static JuegoController controller;
+    private GestorNiveles gestorNiveles;
 
-    public JuegoController(Tablero tablero, JuegoPanel panel) {
-        this.tablero = tablero;
-        this.panel = panel;
+    private JuegoController(){
+        gestorNiveles = new GestorNiveles();
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        boolean seMovio = false;
-
-        // Mandamos la diferencia matemática: (Fila, Columna)
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP:    seMovio = tablero.moverJugador(-1, 0); break;
-            case KeyEvent.VK_DOWN:  seMovio = tablero.moverJugador(1, 0); break;
-            case KeyEvent.VK_LEFT:  seMovio = tablero.moverJugador(0, -1); break;
-            case KeyEvent.VK_RIGHT: seMovio = tablero.moverJugador(0, 1); break;
+    public static JuegoController getInstance(){
+        if(controller == null){
+            controller = new JuegoController();
         }
-
-        // Si el tablero confirmó que se pudo mover, actualizamos la pantalla
-        if (seMovio) {
-            panel.repaint();
-
-            if (tablero.verificarVictoria()) {
-                JOptionPane.showMessageDialog(panel, "¡Nivel Completado!");
-            }
-        }
+        return controller;
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {}
+    public void iniciarJuego() {
+        NivelFactory factory = new NivelRockFactory();
 
-    @Override
-    public void keyReleased(KeyEvent e) {}
+        NivelLoader loader = new NivelLoader(factory);
 
+        tablero = loader.cargarNivel(gestorNiveles.getRutaNivelActual());
+    }
 
+    public boolean pasarAlSiguienteNivel() {
+        boolean haySiguiente = gestorNiveles.siguienteNivel();
+
+        if (haySiguiente) {
+            NivelFactory factory = new NivelRockFactory();
+            NivelLoader loader = new NivelLoader(factory);
+
+            tablero = loader.cargarNivel(gestorNiveles.getRutaNivelActual());
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean moverArriba() {
+        return moverJugador(-1, 0);
+    }
+
+    public boolean moverAbajo() {
+        return moverJugador(1, 0);
+    }
+
+    public boolean moverIzquierda() {
+        return moverJugador(0, -1);
+    }
+
+    public boolean moverDerecha() {
+        return moverJugador(0, 1);
+    }
+
+    private boolean moverJugador(int difFila, int difColumna) {
+        return tablero.moverJugador(difFila, difColumna);
+    }
+
+    public boolean nivelCompletado() {
+        return tablero.verificarVictoria();
+    }
+
+     public List<ObjetoView> getParedesView() {
+        List<ObjetoView> vistas = new ArrayList<>();
+
+        for (Pared pared : tablero.getParedes()) {
+            vistas.add(new ObjetoView(
+                    pared.getPosicion().getFila(),
+                    pared.getPosicion().getColumna()
+            ));
+        }
+
+        return vistas;
+    }
+
+    public List<ObjetoView> getDestinosView() {
+        List<ObjetoView> vistas = new ArrayList<>();
+
+        for (Destino destino : tablero.getDestinos()) {
+            vistas.add(new ObjetoView(
+                    destino.getPosicion().getFila(),
+                    destino.getPosicion().getColumna()
+            ));
+        }
+
+        return vistas;
+    }
+
+    public List<ObjetoView> getCajasView() {
+        List<ObjetoView> vistas = new ArrayList<>();
+
+        for (Caja caja : tablero.getCajas()) {
+            vistas.add(new ObjetoView(
+                    caja.getPosicion().getFila(),
+                    caja.getPosicion().getColumna()
+            ));
+        }
+
+        return vistas;
+    }
+
+    public Optional<ObjetoView> getJugadorView() {
+        return Optional.ofNullable(tablero.getJugador())
+                .map(jugador -> new ObjetoView(
+                        jugador.getPosicion().getFila(),
+                        jugador.getPosicion().getColumna()
+                ));
+    }
+
+    public int getNivelActual() {
+        return gestorNiveles.getNivelActual();
+    }
 }

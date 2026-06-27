@@ -90,16 +90,23 @@ public class Tablero {
     }
     // Este método revisa si todas las cajas están paradas exactamente sobre un destino
     public boolean verificarVictoria() {
+
+        if (cajas.isEmpty() || destinos.isEmpty()) {
+            return false;
+        }
+
         int cajasEnDestino = 0;
+
         for (Caja caja : cajas) {
             for (Destino destino : destinos) {
                 if (caja.getPosicion().getFila() == destino.getPosicion().getFila() &&
-                        caja.getPosicion().getColumna() == destino.getPosicion().getColumna()) {
+                    caja.getPosicion().getColumna() == destino.getPosicion().getColumna()) {
                     cajasEnDestino++;
                     break;
                 }
             }
         }
+        
         // Si la cantidad de cajas en destino coincide con el total de cajas, devuelve true (ganaste)
         return cajasEnDestino == cajas.size();
     }

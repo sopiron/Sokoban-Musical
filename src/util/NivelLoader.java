@@ -8,6 +8,12 @@ import java.io.IOException;
 
 public class NivelLoader {
 
+    private NivelFactory factory;
+
+    public NivelLoader(NivelFactory factory) {
+        this.factory = factory;
+    }
+
     public Tablero cargarNivel(String rutaArchivo) {
 
         Tablero tablero = new Tablero();
@@ -29,28 +35,7 @@ public class NivelLoader {
                     Posicion posicion =
                             new Posicion(fila, columna);
 
-                    switch (simbolo) {
-
-                        case '#':
-                            tablero.getParedes()
-                                   .add(new Pared(posicion));
-                            break;
-
-                        case '$':
-                            tablero.getCajas()
-                                   .add(new Caja(posicion));
-                            break;
-
-                        case '.':
-                            tablero.getDestinos()
-                                   .add(new Destino(posicion));
-                            break;
-
-                        case '@':
-                            tablero.setJugador(
-                                    new Jugador(posicion));
-                            break;
-                    }
+                    factory.crearElemento(simbolo, posicion, tablero);
                 }
 
                 fila++;
@@ -63,6 +48,4 @@ public class NivelLoader {
         return tablero;
     }
 
-    public NivelLoader() {
-    }
 }
