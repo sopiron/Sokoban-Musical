@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import modelo.dificultad.DificultadBaja;
+import modelo.dificultad.DificultadPorNivel;
+
 public class NivelRockFactory implements NivelFactory{
 
     private Map<Character, BiConsumer<Posicion, Tablero>> creadores;
@@ -58,6 +61,11 @@ public class NivelRockFactory implements NivelFactory{
     @Override
     public String getRutaMusicaFondo() {
         return "/sounds/rock.wav";
+    }
+
+    @Override
+    public DificultadPorNivel crearDificultadPorNivel() {
+        return new DificultadBaja();
     }
     
 }

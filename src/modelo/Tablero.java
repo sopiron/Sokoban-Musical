@@ -13,6 +13,7 @@ public class Tablero {
         cajas = new ArrayList<>();
         paredes = new ArrayList<>();
         destinos = new ArrayList<>();
+
     }
 
     public Jugador getJugador() {
@@ -110,4 +111,5 @@ public class Tablero {
         // Si la cantidad de cajas en destino coincide con el total de cajas, devuelve true (ganaste)
         return cajasEnDestino == cajas.size();
     }
+
 }

@@ -216,6 +216,8 @@ public class MenuPrincipalView extends JFrame {
 
         JuegoPanel panelJuego = new JuegoPanel(controller);
 
+        controller.agregarObservadorBarra(panelJuego.getBarraPuntos());
+
         JFrame ventanaJuego = new JFrame("Sokoban Musical - Jugando");
         ventanaJuego.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventanaJuego.setMinimumSize(new Dimension(1000, 700));

@@ -4,10 +4,12 @@ import modelo.Caja;
 import modelo.Destino;
 import modelo.GestorNiveles;
 import modelo.GestorSonido;
+import modelo.MedidorNivel;
 import modelo.NivelFactory;
 import modelo.NivelFactoryRegistry;
 import modelo.Pared;
 import modelo.Tablero;
+import modelo.observer.ObserverBarraJuego;
 import util.NivelLoader;
 import views.ObjetoView;
 
@@ -21,10 +23,12 @@ public class JuegoController{
     private static JuegoController controller;
     private GestorNiveles gestorNiveles;
     private NivelFactoryRegistry factoryRegistry;
+    private MedidorNivel medidorNivel;
 
     private JuegoController(){
         gestorNiveles = new GestorNiveles();
         factoryRegistry = new NivelFactoryRegistry();
+        medidorNivel = new MedidorNivel();
     }
 
     public static JuegoController getInstance(){
@@ -49,9 +53,13 @@ public class JuegoController{
         tablero = loader.cargarNivel(gestorNiveles.getRutaNivelActual());
 
         GestorSonido.getInstance().reproducirMusica(factory.getRutaMusicaFondo());
+
+        medidorNivel.iniciarNivel(gestorNiveles.getNivelActual(),factory.crearDificultadPorNivel());
     }
 
     public boolean pasarAlSiguienteNivel() {
+        medidorNivel.finalizarNivel();
+
         boolean haySiguiente = gestorNiveles.siguienteNivel();
 
         if (haySiguiente) {
@@ -82,7 +90,7 @@ public class JuegoController{
     private boolean moverJugador(int difFila, int difColumna) {
         return tablero.moverJugador(difFila, difColumna);
     }
-    
+
 
     public boolean nivelCompletado() {
         return tablero.verificarVictoria();
@@ -139,4 +147,12 @@ public class JuegoController{
     public int getNivelActual() {
         return gestorNiveles.getNivelActual();
     }
+
+    public void agregarObservadorBarra(ObserverBarraJuego observador) {
+        medidorNivel.agregarObservador(observador);
+    }
+
+    public String getNotasUltimoNivel() {
+        return medidorNivel.getNotasUltimoNivel();
+}
 }

@@ -18,6 +18,8 @@ public class JuegoPanel extends JPanel {
 
     private JuegoController controller;
 
+    private BarraPuntos barraPuntos;
+
     private Image imagenFondo;
     private Image imagenPiso;
     private Image imagenPared;
@@ -26,7 +28,7 @@ public class JuegoPanel extends JPanel {
     private Image imagenJugador;
     private Map<String, Image> imagenesCache;
 
-    private final int TAMANIO_CELDA = 100;
+    private final int TAMANIO_CELDA = 85;
 
     public JuegoPanel(JuegoController controller) {
         this.controller = controller;
@@ -37,6 +39,11 @@ public class JuegoPanel extends JPanel {
 
         cargarImagenes();
         configurarTeclas();
+
+        setLayout(null);
+
+        barraPuntos = new BarraPuntos();
+        add(barraPuntos);
 
         SwingUtilities.invokeLater(() -> requestFocusInWindow());
     }
@@ -118,7 +125,20 @@ public class JuegoPanel extends JPanel {
         }
     }
 
-     @Override
+    @Override
+    public void doLayout() {
+        super.doLayout();
+
+        int anchoBarra = 720;
+        int altoBarra = 70;
+
+        int x = (getWidth() - anchoBarra) / 2;
+        int y = 35;
+
+        barraPuntos.setBounds(x, y, anchoBarra, altoBarra);
+    }
+
+    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -249,5 +269,10 @@ public class JuegoPanel extends JPanel {
 
     private interface MovimientoVista {
         boolean ejecutar();
+    }
+
+
+    public BarraPuntos getBarraPuntos() {
+        return barraPuntos;
     }
 }
