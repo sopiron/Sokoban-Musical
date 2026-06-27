@@ -8,6 +8,7 @@ import modelo.MedidorNivel;
 import modelo.NivelFactory;
 import modelo.NivelFactoryRegistry;
 import modelo.Pared;
+import modelo.ResultadoNivel;
 import modelo.Tablero;
 import modelo.observer.ObserverBarraJuego;
 import util.NivelLoader;
@@ -58,7 +59,6 @@ public class JuegoController{
     }
 
     public boolean pasarAlSiguienteNivel() {
-        medidorNivel.finalizarNivel();
 
         boolean haySiguiente = gestorNiveles.siguienteNivel();
 
@@ -68,6 +68,14 @@ public class JuegoController{
         }
 
         return false;
+    }
+
+    public ResultadoNivel finalizarNivelActual() {
+        return medidorNivel.finalizarNivel();
+    }
+
+    public boolean haySiguienteNivel() {
+        return gestorNiveles.haySiguienteNivel();
     }
 
 
@@ -154,5 +162,14 @@ public class JuegoController{
 
     public String getNotasUltimoNivel() {
         return medidorNivel.getNotasUltimoNivel();
-}
+    }
+
+    public void iniciarJuegoEnNivel(int nivel) {
+        gestorNiveles.setNivelActual(nivel);
+        cargarNivelActual();
+    }
+
+    public int getCantidadNiveles() {
+        return gestorNiveles.getCantidadNiveles();
+    }
 }

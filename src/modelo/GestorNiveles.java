@@ -39,19 +39,41 @@ public class GestorNiveles {
 
     //Sirve para poder saber que genero es
     public String getGeneroNivelActual() {
-    try (java.io.BufferedReader br = new java.io.BufferedReader(
-            new java.io.FileReader(getRutaNivelActual()))) {
+        try (java.io.BufferedReader br = new java.io.BufferedReader(
+                new java.io.FileReader(getRutaNivelActual()))) {
 
-        String primeraLinea = br.readLine();
+            String primeraLinea = br.readLine();
 
-        if (primeraLinea != null && primeraLinea.startsWith("GENERO=")) {
-            return primeraLinea.replace("GENERO=", "").trim();
+            if (primeraLinea != null && primeraLinea.startsWith("GENERO=")) {
+                return primeraLinea.replace("GENERO=", "").trim();
+            }
+
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
         }
 
-    } catch (java.io.IOException e) {
-        e.printStackTrace();
+        return "ROCK";
     }
 
-    return "ROCK";
-}
+    public void setNivelActual(int nivelActual) {
+        this.nivelActual = nivelActual;
+    }
+
+    public int getCantidadNiveles() {
+        int cantidad = 0;
+        int numero = 1;
+
+        while (true) {
+            File archivo = new File(CARPETA_NIVELES + "nivel" + numero + ".txt");
+
+            if (!archivo.exists()) {
+                break;
+            }
+
+            cantidad++;
+            numero++;
+        }
+
+        return cantidad;
+    }
 }

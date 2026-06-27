@@ -1,6 +1,7 @@
 package vista;
 
 import controller.JuegoController;
+import modelo.ResultadoNivel;
 import views.ObjetoView;
 
 import java.net.URL;
@@ -106,20 +107,23 @@ public class JuegoPanel extends JPanel {
             repaint();
 
             if (controller.nivelCompletado()) {
-                boolean haySiguiente = controller.pasarAlSiguienteNivel();
 
-                if (haySiguiente) {
-                    JOptionPane.showMessageDialog(
-                            this,
-                            "¡Nivel completado! Pasás al nivel " + controller.getNivelActual()
-                    );
+                ResultadoNivel resultado = controller.finalizarNivelActual();
 
+                int nivelCompletado = controller.getNivelActual();
+                boolean haySiguiente = controller.haySiguienteNivel();
+
+                boolean continuar = mostrarPopupNivelCompletado(
+                        resultado,
+                        nivelCompletado,
+                        haySiguiente
+                );
+
+                if (haySiguiente && continuar) {
+                    controller.pasarAlSiguienteNivel();
+
+                    revalidate();
                     repaint();
-                } else {
-                    JOptionPane.showMessageDialog(
-                            this,
-                            "¡Felicitaciones! Completaste todos los niveles."
-                    );
                 }
             }
         }
@@ -265,6 +269,39 @@ public class JuegoPanel extends JPanel {
                     this
             );
         }
+    }
+
+    private boolean mostrarPopupNivelCompletado(
+        ResultadoNivel resultado,
+        int nivelCompletado,
+        boolean haySiguiente
+    ) {
+        String textoBoton = haySiguiente
+                ? "Pasar al próximo nivel"
+                : "Finalizar juego";
+
+        String mensaje =
+                "<html>" +
+                        "<div style='text-align:center; width:300px;'>" +
+                        "<h2>♪ Nivel " + nivelCompletado + " completado</h2>" +
+                        "<p><b>Tiempo:</b> " + resultado.getTiempoFormateado() + "</p>" +
+                        "<p><b>Notas obtenidas:</b></p>" +
+                        "<p style='font-size:28px; color:#E0AB4A;'>" + resultado.getNotas() + "</p>" +
+                        "</div>" +
+                        "</html>";
+
+        int opcion = JOptionPane.showOptionDialog(
+                this,
+                mensaje,
+                "Resultado del nivel",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                new Object[]{textoBoton},
+                textoBoton
+        );
+
+        return opcion == 0;
     }
 
     private interface MovimientoVista {

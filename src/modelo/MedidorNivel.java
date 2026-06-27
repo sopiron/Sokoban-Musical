@@ -14,6 +14,7 @@ public class MedidorNivel {
     private int nivelActual;
     private String notasUltimoNivel;
     private DificultadPorNivel dificultadPorNivel;
+    private ResultadoNivel resultadoUltimoNivel;
 
     public MedidorNivel() {
         observadores = new ArrayList<>();
@@ -43,12 +44,17 @@ public class MedidorNivel {
         notificar();
     }
 
-    public void finalizarNivel() {
-        notasUltimoNivel = calcularNotas();
+    public ResultadoNivel finalizarNivel() {
+        int segundos = getSegundosTranscurridos();
+        String notas = dificultadPorNivel.calcularNotas(segundos);
+
+        resultadoUltimoNivel = new ResultadoNivel(segundos, notas);
 
         if (timer != null) {
             timer.stop();
         }
+
+        return resultadoUltimoNivel;
     }
 
     public String getNotasUltimoNivel() {
@@ -74,4 +80,9 @@ public class MedidorNivel {
             observador.actualizarBarra(nivelActual, segundos, notas);
         }
     }
+
+    public ResultadoNivel getResultadoUltimoNivel() {
+        return resultadoUltimoNivel;
+    }
+    
 }
