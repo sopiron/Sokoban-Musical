@@ -3,7 +3,9 @@ package controller;
 import modelo.Caja;
 import modelo.Destino;
 import modelo.GestorNiveles;
+import modelo.GestorSonido;
 import modelo.NivelFactory;
+import modelo.NivelFactoryRegistry;
 import modelo.NivelRockFactory;
 import modelo.Pared;
 import modelo.Tablero;
@@ -19,9 +21,11 @@ public class JuegoController{
     private Tablero tablero;
     private static JuegoController controller;
     private GestorNiveles gestorNiveles;
+    private NivelFactoryRegistry factoryRegistry;
 
     private JuegoController(){
         gestorNiveles = new GestorNiveles();
+        factoryRegistry = new NivelFactoryRegistry();
     }
 
     public static JuegoController getInstance(){
@@ -32,21 +36,27 @@ public class JuegoController{
     }
 
     public void iniciarJuego() {
-        NivelFactory factory = new NivelRockFactory();
+        gestorNiveles.reiniciar();
+        cargarNivelActual();
+    }
+
+    private void cargarNivelActual() {
+        String genero = gestorNiveles.getGeneroNivelActual();
+
+        NivelFactory factory = factoryRegistry.obtenerFactory(genero);
 
         NivelLoader loader = new NivelLoader(factory);
 
         tablero = loader.cargarNivel(gestorNiveles.getRutaNivelActual());
+
+        GestorSonido.getInstance().reproducirMusica(factory.getRutaMusicaFondo());
     }
 
     public boolean pasarAlSiguienteNivel() {
         boolean haySiguiente = gestorNiveles.siguienteNivel();
 
         if (haySiguiente) {
-            NivelFactory factory = new NivelRockFactory();
-            NivelLoader loader = new NivelLoader(factory);
-
-            tablero = loader.cargarNivel(gestorNiveles.getRutaNivelActual());
+            cargarNivelActual();
             return true;
         }
 
@@ -109,7 +119,8 @@ public class JuegoController{
         for (Caja caja : tablero.getCajas()) {
             vistas.add(new ObjetoView(
                     caja.getPosicion().getFila(),
-                    caja.getPosicion().getColumna()
+                    caja.getPosicion().getColumna(),
+                    caja.getRutaImagen()
             ));
         }
 

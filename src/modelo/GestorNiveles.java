@@ -36,4 +36,22 @@ public class GestorNiveles {
     public void reiniciar() {
         nivelActual = 1;
     }
+
+    //Sirve para poder saber que genero es
+    public String getGeneroNivelActual() {
+    try (java.io.BufferedReader br = new java.io.BufferedReader(
+            new java.io.FileReader(getRutaNivelActual()))) {
+
+        String primeraLinea = br.readLine();
+
+        if (primeraLinea != null && primeraLinea.startsWith("GENERO=")) {
+            return primeraLinea.replace("GENERO=", "").trim();
+        }
+
+    } catch (java.io.IOException e) {
+        e.printStackTrace();
+    }
+
+    return "ROCK";
+}
 }

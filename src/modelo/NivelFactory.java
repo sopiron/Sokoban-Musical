@@ -6,4 +6,5 @@ public interface NivelFactory {
     Destino crearDestino(Posicion posicion);
     Jugador crearJugador(Posicion posicion);
     void crearElemento(char simbolo, Posicion posicion, Tablero tablero);
+    public abstract String getRutaMusicaFondo();
 }

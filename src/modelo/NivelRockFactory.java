@@ -30,7 +30,7 @@ public class NivelRockFactory implements NivelFactory{
 
     @Override
     public Caja crearCaja(Posicion posicion) {
-        return new Caja(posicion); // después puede ser CajaSaxo
+        return new Caja(posicion, "/images/CajaGuitarra.png"); // después puede ser CajaSaxo
     }
 
     @Override
@@ -53,6 +53,11 @@ public class NivelRockFactory implements NivelFactory{
         creadores
                 .getOrDefault(simbolo, (p, t) -> {})
                 .accept(posicion, tablero);
+    }
+
+    @Override
+    public String getRutaMusicaFondo() {
+        return "/sounds/rock.wav";
     }
     
 }

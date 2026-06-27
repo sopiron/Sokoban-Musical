@@ -2,9 +2,11 @@ package modelo;
 
 public class Caja implements ElementoInteractuable {
     private Posicion posicion;
+    private String rutaImagen;
 
-    public Caja(Posicion posicion) {
+    public Caja(Posicion posicion, String rutaImagen) {
         this.posicion = posicion;
+        this.rutaImagen = rutaImagen;
     }
 
     public Posicion getPosicion() { return posicion; }
@@ -31,5 +33,9 @@ public class Caja implements ElementoInteractuable {
         }
 
         return false; // Atrás hay una pared u otra caja, bloquea el movimiento
+    }
+
+    public String getRutaImagen() {
+        return rutaImagen;
     }
 }

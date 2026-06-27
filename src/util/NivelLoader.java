@@ -26,6 +26,10 @@ public class NivelLoader {
 
             while ((linea = br.readLine()) != null) {
 
+                    if (linea.startsWith("GENERO=")) {
+                        continue;
+                    }
+
                 for (int columna = 0;
                      columna < linea.length();
                      columna++) {
