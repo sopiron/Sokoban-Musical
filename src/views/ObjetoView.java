@@ -24,4 +24,8 @@ public class ObjetoView {
     public int getColumna() {
         return columna;
     }
+
+    public String getRutaImagen(){
+        return rutaImagen;
+    }
 }

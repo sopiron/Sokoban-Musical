@@ -6,7 +6,6 @@ import modelo.GestorNiveles;
 import modelo.GestorSonido;
 import modelo.NivelFactory;
 import modelo.NivelFactoryRegistry;
-import modelo.NivelRockFactory;
 import modelo.Pared;
 import modelo.Tablero;
 import util.NivelLoader;
@@ -63,6 +62,7 @@ public class JuegoController{
         return false;
     }
 
+
     public boolean moverArriba() {
         return moverJugador(-1, 0);
     }
@@ -82,6 +82,7 @@ public class JuegoController{
     private boolean moverJugador(int difFila, int difColumna) {
         return tablero.moverJugador(difFila, difColumna);
     }
+    
 
     public boolean nivelCompletado() {
         return tablero.verificarVictoria();

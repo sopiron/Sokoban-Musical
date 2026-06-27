@@ -5,7 +5,9 @@ import views.ObjetoView;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.swing.*;
@@ -22,11 +24,13 @@ public class JuegoPanel extends JPanel {
     private Image imagenCaja;
     private Image imagenDestino;
     private Image imagenJugador;
+    private Map<String, Image> imagenesCache;
 
     private final int TAMANIO_CELDA = 100;
 
     public JuegoPanel(JuegoController controller) {
         this.controller = controller;
+        this.imagenesCache = new HashMap<>();
 
         setBackground(Color.LIGHT_GRAY);
         setFocusable(true);
@@ -41,7 +45,7 @@ public class JuegoPanel extends JPanel {
         imagenFondo = cargarImagen("/images/fondo-juego.png");
         imagenPiso = cargarImagen("/images/piso.png");
         imagenPared = cargarImagen("/images/pared.png");
-        imagenCaja = cargarImagen("/images/caja.png");
+        imagenCaja = cargarImagen("/images/cajaGuitarra.png");
         imagenDestino = cargarImagen("/images/destino.png");
         imagenJugador = cargarImagen("/images/personaje.png");
     }
@@ -54,6 +58,19 @@ public class JuegoPanel extends JPanel {
         }
 
         return new ImageIcon(url).getImage();
+    }
+
+    //Cargar imagenes con url dinámicas
+    private Image obtenerImagenDesdeRuta(String ruta, Image imagenPorDefecto) {
+        if (ruta == null || ruta.isEmpty()) {
+            return imagenPorDefecto;
+        }
+
+        if (!imagenesCache.containsKey(ruta)) {
+            imagenesCache.put(ruta, cargarImagen(ruta));
+        }
+
+        return imagenesCache.get(ruta);
     }
 
     private void configurarTeclas() {
@@ -194,7 +211,21 @@ public class JuegoPanel extends JPanel {
             int x = offsetX + (caja.getColumna() - minCol) * TAMANIO_CELDA;
             int y = offsetY + (caja.getFila() - minFila) * TAMANIO_CELDA;
 
-            g.drawImage(imagenCaja, x, y, TAMANIO_CELDA, TAMANIO_CELDA, this);
+            Image imagenCajaActual = obtenerImagenDesdeRuta(
+                    caja.getRutaImagen(),
+                    imagenCaja
+            );
+
+            int margenCaja = 4;
+
+            g.drawImage(
+                    imagenCajaActual,
+                    x + margenCaja,
+                    y + margenCaja,
+                    TAMANIO_CELDA - margenCaja * 2,
+                    TAMANIO_CELDA - margenCaja * 2,
+                    this
+            );
         }
 
         // 5. Dibujar jugador

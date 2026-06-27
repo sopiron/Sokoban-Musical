@@ -30,7 +30,7 @@ public class NivelRockFactory implements NivelFactory{
 
     @Override
     public Caja crearCaja(Posicion posicion) {
-        return new Caja(posicion, "/images/CajaGuitarra.png"); // después puede ser CajaSaxo
+        return new Caja(posicion, "/images/cajaGuitarra.png"); // después puede ser CajaSaxo
     }
 
     @Override
