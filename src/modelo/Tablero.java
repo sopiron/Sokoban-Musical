@@ -106,6 +106,17 @@ public class Tablero {
         return cajasEnDestino == cajas.size();
     }
 
+    public boolean esDestino(int fila, int columna) {
+        for (Destino destino : destinos) {
+            if (destino.getPosicion().getFila() == fila &&
+                destino.getPosicion().getColumna() == columna) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     //---------------------------------------------------------
     //
     //Caja con efecto de deslizamiento
@@ -144,6 +155,12 @@ public class Tablero {
         cajaDeslizandose.setPosicion(
                 new Posicion(siguienteFila, siguienteColumna)
         );
+
+        // Si llegó a un destino, se queda ahí y deja de deslizar
+        if (esDestino(siguienteFila, siguienteColumna)) {
+            detenerDeslizamiento();
+            return false;
+        }
 
         return true;
     }

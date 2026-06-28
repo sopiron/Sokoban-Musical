@@ -167,35 +167,6 @@ public class JuegoPanel extends JPanel {
         }
     }
 
-    // private void moverYActualizar(MovimientoVista movimiento) {
-    //     boolean seMovio = movimiento.ejecutar();
-
-    //     if (seMovio) {
-    //         repaint();
-
-    //         if (controller.nivelCompletado()) {
-
-    //             ResultadoNivel resultado = controller.finalizarNivelActual();
-
-    //             int nivelCompletado = controller.getNivelActual();
-    //             boolean haySiguiente = controller.haySiguienteNivel();
-
-    //             boolean continuar = mostrarPopupNivelCompletado(
-    //                     resultado,
-    //                     nivelCompletado,
-    //                     haySiguiente
-    //             );
-
-    //             if (haySiguiente && continuar) {
-    //                 controller.pasarAlSiguienteNivel();
-
-    //                 revalidate();
-    //                 repaint();
-    //             }
-    //         }
-    //     }
-    // }
-
     @Override
     public void doLayout() {
         super.doLayout();
