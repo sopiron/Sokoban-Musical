@@ -5,15 +5,15 @@ import java.net.URL;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 
 public class GestorSonido {
 
     private static GestorSonido gestorSonido;
     private Clip musicaActual;
+    private String rutaActual;
 
-    private GestorSonido(){
-
-    }
+    private GestorSonido(){}
 
     public static GestorSonido getInstance(){
         if (gestorSonido == null){
@@ -25,6 +25,7 @@ public class GestorSonido {
 
     public void reproducirMusica(String ruta) {
         detenerMusica();
+        rutaActual = ruta;
 
         try {
             URL url = getClass().getResource(ruta);
@@ -50,5 +51,14 @@ public class GestorSonido {
             musicaActual.close();
         }
     }
-    
+
+    public void setMutear(boolean mutear) {
+        if (musicaActual == null) return;
+        try {
+            FloatControl volumen = (FloatControl) musicaActual.getControl(FloatControl.Type.MASTER_GAIN);
+            volumen.setValue(mutear ? volumen.getMinimum() : 0.0f);
+        } catch (Exception e) {
+            // Si el control no está disponible, ignoramos
+        }
+    }
 }

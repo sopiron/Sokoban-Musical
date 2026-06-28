@@ -1,6 +1,7 @@
 package modelo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import modelo.movimientoCaja.MovimientoCaja;
 import modelo.movimientoCaja.MovimientoNormal;
@@ -14,6 +15,8 @@ public class Tablero {
     private ArrayList<Pared> paredes;
     private ArrayList<Destino> destinos;
     private ArrayList<PisoResbaladizo> pisosResbaladizos;
+    private HistorialMovimientos historial;
+
     private MovimientoCaja movimientoNormal;
     private MovimientoCaja movimientoResbaladizo;
 
@@ -29,6 +32,7 @@ public class Tablero {
         pisosResbaladizos = new ArrayList<>();
 
         estadisticasNivel = new EstadisticasNivel();
+        historial = new HistorialMovimientos();
         movimientoNormal = new MovimientoNormal();
         movimientoResbaladizo = new MovimientoResbaladizo();
     }
@@ -68,13 +72,18 @@ public class Tablero {
 
         // Si no hay nada adelante, el jugador camina tranquilo
         if (elementoFrente == null) {
+            historial.guardar(guardarMemento());
             jugador.mover(difFila, difColumna);
             estadisticasNivel.registrarMovimiento();
             return true;
         }
 
+        // Guardamos el snapshot ANTES de que el elemento (ej: caja) cambie su estado
+        TableroMemento snapshotPrevio = guardarMemento();
+
         // Si hay un elemento, DELEGAMOS la decisión. El elemento interactúa y decide si nos deja pasar.
         if (elementoFrente.interactuar(difFila, difColumna, this)) {
+            historial.guardar(snapshotPrevio);
             jugador.mover(difFila, difColumna);
             estadisticasNivel.registrarMovimiento();
             return true;
@@ -95,7 +104,7 @@ public class Tablero {
         for (Caja caja : cajas) {
             for (Destino destino : destinos) {
                 if (caja.getPosicion().getFila() == destino.getPosicion().getFila() &&
-                    caja.getPosicion().getColumna() == destino.getPosicion().getColumna()) {
+                        caja.getPosicion().getColumna() == destino.getPosicion().getColumna()) {
                     cajasEnDestino++;
                     break;
                 }
@@ -179,45 +188,62 @@ public class Tablero {
         return movimientoNormal;
     }
 
+    // ── Memento ────────────────────────────────────────────────────────────────
 
-    public Jugador getJugador() {
-        return jugador;
+    public TableroMemento guardarMemento() {
+        List<Posicion> posCajas = new ArrayList<>();
+        for (Caja caja : cajas) {
+            posCajas.add(new Posicion(
+                    caja.getPosicion().getFila(),
+                    caja.getPosicion().getColumna()
+            ));
+        }
+        Posicion posJugador = new Posicion(
+                jugador.getPosicion().getFila(),
+                jugador.getPosicion().getColumna()
+        );
+        return new TableroMemento(posCajas, posJugador);
     }
 
-    public void setJugador(Jugador jugador) {
-        this.jugador = jugador;
+    public void restaurarMemento(TableroMemento memento) {
+        List<Posicion> posCajas = memento.getPosicionesCajas();
+        for (int i = 0; i < cajas.size() && i < posCajas.size(); i++) {
+            cajas.get(i).setPosicion(posCajas.get(i));
+        }
+        jugador.setPosicion(memento.getPosicionJugador());
     }
 
-    public ArrayList<Caja> getCajas() {
-        return cajas;
+    public boolean deshacerMovimiento() {
+        TableroMemento memento = historial.undo();
+        if (memento == null) return false;
+        restaurarMemento(memento);
+        estadisticasNivel.registrarUndo();
+        return true;
     }
 
-    public void setCajas(ArrayList<Caja> cajas) {
-        this.cajas = cajas;
+    public boolean puedeDeshacer() {
+        return historial.puedeDeshacer();
     }
 
-    public ArrayList<Pared> getParedes() {
-        return paredes;
+    public HistorialMovimientos getHistorial() {
+        return historial;
     }
 
-    public void setParedes(ArrayList<Pared> paredes) {
-        this.paredes = paredes;
-    }
+    // ── Getters y Setters ──────────────────────────────────────────────────────
 
-    public ArrayList<Destino> getDestinos() {
-        return destinos;
-    }
+    public Jugador getJugador() { return jugador; }
+    public void setJugador(Jugador jugador) { this.jugador = jugador; }
 
-    public void setDestinos(ArrayList<Destino> destinos) {
-        this.destinos = destinos;
-    }
+    public ArrayList<Caja> getCajas() { return cajas; }
+    public void setCajas(ArrayList<Caja> cajas) { this.cajas = cajas; }
 
-    public EstadisticasNivel getEstadisticasNivel() {
-        return estadisticasNivel;
-    }
+    public ArrayList<Pared> getParedes() { return paredes; }
+    public void setParedes(ArrayList<Pared> paredes) { this.paredes = paredes; }
 
-    public ArrayList<PisoResbaladizo> getPisosResbaladizos() {
-        return pisosResbaladizos;
-    }
+    public ArrayList<Destino> getDestinos() { return destinos; }
+    public void setDestinos(ArrayList<Destino> destinos) { this.destinos = destinos; }
 
+    public ArrayList<PisoResbaladizo> getPisosResbaladizos() { return pisosResbaladizos; }
+
+    public EstadisticasNivel getEstadisticasNivel() { return estadisticasNivel; }
 }

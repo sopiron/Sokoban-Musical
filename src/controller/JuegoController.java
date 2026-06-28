@@ -200,10 +200,48 @@ public class JuegoController{
         return medidorNivel.getNotasUltimoNivel();
     }
 
+
     public int getCantidadNiveles() {
         return gestorNiveles.getCantidadNiveles();
     }
 
+    /**
+     * Ejecuta el undo: retrocede hasta 5 movimientos.
+     * Devuelve true si se pudo deshacer.
+     */
+    public boolean accionUndo() {
+        return tablero.deshacerMovimiento();
+    }
+
+    public boolean puedeDeshacer() {
+        return tablero != null && tablero.puedeDeshacer();
+    }
+
+    public int getUsosUndoRestantes() {
+        if (tablero == null) return 3;
+        return 3 - tablero.getHistorial().getUsosConsecutivos();
+    }
+
+    public void pausar() {
+        medidorNivel.pausar();
+    }
+
+    public void reanudar() {
+        medidorNivel.reanudar();
+    }
+
+    public boolean isPausado() {
+        return medidorNivel.isPausado();
+    }
+
+    public String getNotasActuales() {
+        return medidorNivel.getNotasActuales();
+    }
+
+    public void reiniciarNivel() {
+        medidorNivel.reanudar();
+        cargarNivelActual();
+    }
     public int getNivelActual() {
         return gestorNiveles.getNivelActual();
     }

@@ -12,6 +12,8 @@ public class MedidorNivel {
     private ArrayList<ObserverBarraJuego> observadores;
     private Timer timer;
     private long inicioNivel;
+    private long tiempoPausado;   // acumula millis pausados
+    private boolean pausado = false;
     private int nivelActual;
     private String notasUltimoNivel;
     private DificultadPorNivel dificultadPorNivel;
@@ -34,6 +36,8 @@ public class MedidorNivel {
         this.nivelActual = nivelActual;
         this.dificultadPorNivel = dificultadPorNivel;
         this.inicioNivel = System.currentTimeMillis();
+        this.tiempoPausado = 0;
+        this.pausado = false;
 
         if (timer != null) {
             timer.stop();
@@ -43,6 +47,32 @@ public class MedidorNivel {
         timer.start();
 
         notificar();
+    }
+
+    public void pausar() {
+        if (!pausado) {
+            pausado = true;
+            tiempoPausado = System.currentTimeMillis();
+            if (timer != null) timer.stop();
+        }
+    }
+
+    public void reanudar() {
+        if (pausado) {
+            // Descontamos el tiempo que estuvo pausado
+            inicioNivel += (System.currentTimeMillis() - tiempoPausado);
+            pausado = false;
+            if (timer != null) timer.start();
+        }
+    }
+
+    public boolean isPausado() {
+        return pausado;
+    }
+
+    public String getNotasActuales() {
+        if (dificultadPorNivel == null) return "♫♫♫";
+        return dificultadPorNivel.calcularNotas(getSegundosTranscurridos());
     }
 
     public ResultadoNivel finalizarNivel(EstadisticasNivel estadisticas, CriterioPuntaje criterioPuntaje) {
@@ -95,5 +125,5 @@ public class MedidorNivel {
     public ResultadoNivel getResultadoUltimoNivel() {
         return resultadoUltimoNivel;
     }
-    
+
 }

@@ -20,6 +20,8 @@ public class JuegoPanel extends JPanel {
     private JuegoController controller;
 
     private BarraPuntos barraPuntos;
+    private BarraUndo barraUndo;
+    private BotonRedondeado btnPausa;
 
     private Image imagenFondo;
     private Image imagenPiso;
@@ -49,6 +51,19 @@ public class JuegoPanel extends JPanel {
 
         barraPuntos = new BarraPuntos();
         add(barraPuntos);
+
+        barraUndo = new BarraUndo(() -> ejecutarUndo());
+        add(barraUndo);
+
+        btnPausa = new BotonRedondeado(
+                "⏸",
+                new Color(91, 53, 29),
+                new Color(166, 103, 45)
+        );
+        btnPausa.setFont(new Font("SansSerif", Font.BOLD, 22));
+        btnPausa.setFocusable(false);
+        btnPausa.addActionListener(e -> abrirPausa());
+        add(btnPausa);
 
         SwingUtilities.invokeLater(() -> requestFocusInWindow());
     }
@@ -87,10 +102,57 @@ public class JuegoPanel extends JPanel {
     }
 
     private void configurarTeclas() {
-        registrarTecla("UP", () -> moverYActualizar(() -> controller.moverArriba()));
-        registrarTecla("DOWN", () -> moverYActualizar(() -> controller.moverAbajo()));
-        registrarTecla("LEFT", () -> moverYActualizar(() -> controller.moverIzquierda()));
-        registrarTecla("RIGHT", () -> moverYActualizar(() -> controller.moverDerecha()));
+        registrarTecla("UP",     () -> moverYActualizar(() -> controller.moverArriba()));
+        registrarTecla("DOWN",   () -> moverYActualizar(() -> controller.moverAbajo()));
+        registrarTecla("LEFT",   () -> moverYActualizar(() -> controller.moverIzquierda()));
+        registrarTecla("RIGHT",  () -> moverYActualizar(() -> controller.moverDerecha()));
+        registrarTecla("Z",      () -> ejecutarUndo());
+        registrarTecla("ESCAPE", () -> abrirPausa());
+    }
+
+    private void ejecutarUndo() {
+        boolean deshecho = controller.accionUndo();
+        if (deshecho) {
+            repaint();
+        }
+        actualizarBarraUndo();
+    }
+
+    private void abrirPausa() {
+        controller.pausar();
+
+        JFrame ventanaPadre = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+        PopupPausa popup = new PopupPausa(
+                ventanaPadre,
+                controller,
+                () -> reiniciarNivel(),
+                () -> volverAlMenu()
+        );
+
+        popup.setVisible(true);
+        // Al cerrar el popup con ✕, el controller ya reanudó
+    }
+
+    private void reiniciarNivel() {
+        controller.reiniciarNivel();
+        barraUndo.resetearUsos();
+        revalidate();
+        repaint();
+    }
+
+    private void volverAlMenu() {
+        JFrame ventanaActual = (JFrame) SwingUtilities.getWindowAncestor(this);
+        ventanaActual.dispose();
+
+        JuegoController ctrl = JuegoController.getInstance();
+        MenuPrincipalView menu = new MenuPrincipalView(ctrl);
+        menu.setVisible(true);
+    }
+
+    private void actualizarBarraUndo() {
+        int usosRestantes = controller.getUsosUndoRestantes();
+        barraUndo.actualizarUsos(usosRestantes);
     }
 
     private void registrarTecla(String tecla, Runnable accion) {
@@ -114,6 +176,9 @@ public class JuegoPanel extends JPanel {
 
         if (seMovio) {
             repaint();
+
+            // Movimiento real del jugador: se resetean los usos consecutivos de undo
+            barraUndo.resetearUsos();
 
             if (controller.hayCajaDeslizandose()) {
                 iniciarAnimacionDeslizamiento();
@@ -161,12 +226,13 @@ public class JuegoPanel extends JPanel {
             if (haySiguiente && continuar) {
                 controller.pasarAlSiguienteNivel();
 
+                barraUndo.resetearUsos();
+
                 revalidate();
                 repaint();
             }
         }
     }
-
     @Override
     public void doLayout() {
         super.doLayout();
@@ -175,9 +241,14 @@ public class JuegoPanel extends JPanel {
         int altoBarra = 70;
 
         int x = (getWidth() - anchoBarra) / 2;
-        int y = 35;
 
-        barraPuntos.setBounds(x, y, anchoBarra, altoBarra);
+        barraPuntos.setBounds(x, 35, anchoBarra, altoBarra);
+
+        // Botón pausa: arriba a la derecha
+        btnPausa.setBounds(getWidth() - 90, 35, 70, 70);
+
+        // Barra Undo: centrada abajo, mismo ancho que la barra de puntos
+        barraUndo.setBounds(x, getHeight() - 100, anchoBarra, altoBarra);
     }
 
     @Override
