@@ -30,6 +30,9 @@ public class JuegoPanel extends JPanel {
     private Image imagenPisoResbaladizo;
     private Map<String, Image> imagenesCache;
 
+    private Timer timerDeslizamiento;
+    private boolean animandoDeslizamiento;
+
     private final int TAMANIO_CELDA = 85;
 
     public JuegoPanel(JuegoController controller) {
@@ -103,33 +106,95 @@ public class JuegoPanel extends JPanel {
     }
 
     private void moverYActualizar(MovimientoVista movimiento) {
+        if (animandoDeslizamiento) {
+            return;
+        }
+
         boolean seMovio = movimiento.ejecutar();
 
         if (seMovio) {
             repaint();
 
-            if (controller.nivelCompletado()) {
-
-                ResultadoNivel resultado = controller.finalizarNivelActual();
-
-                int nivelCompletado = controller.getNivelActual();
-                boolean haySiguiente = controller.haySiguienteNivel();
-
-                boolean continuar = mostrarPopupNivelCompletado(
-                        resultado,
-                        nivelCompletado,
-                        haySiguiente
-                );
-
-                if (haySiguiente && continuar) {
-                    controller.pasarAlSiguienteNivel();
-
-                    revalidate();
-                    repaint();
-                }
+            if (controller.hayCajaDeslizandose()) {
+                iniciarAnimacionDeslizamiento();
+            } else {
+                verificarFinDeNivel();
             }
         }
     }
+
+    private void iniciarAnimacionDeslizamiento() {
+        animandoDeslizamiento = true;
+
+        timerDeslizamiento = new Timer(150, e -> {
+            boolean sigueDeslizando = controller.deslizarCajaUnPaso();
+
+            repaint();
+
+            if (!sigueDeslizando) {
+                timerDeslizamiento.stop();
+                animandoDeslizamiento = false;
+
+                verificarFinDeNivel();
+
+                SwingUtilities.invokeLater(() -> requestFocusInWindow());
+            }
+        });
+
+        timerDeslizamiento.start();
+    }
+
+    private void verificarFinDeNivel() {
+        if (controller.nivelCompletado()) {
+
+            ResultadoNivel resultado = controller.finalizarNivelActual();
+
+            int nivelCompletado = controller.getNivelActual();
+            boolean haySiguiente = controller.haySiguienteNivel();
+
+            boolean continuar = mostrarPopupNivelCompletado(
+                    resultado,
+                    nivelCompletado,
+                    haySiguiente
+            );
+
+            if (haySiguiente && continuar) {
+                controller.pasarAlSiguienteNivel();
+
+                revalidate();
+                repaint();
+            }
+        }
+    }
+
+    // private void moverYActualizar(MovimientoVista movimiento) {
+    //     boolean seMovio = movimiento.ejecutar();
+
+    //     if (seMovio) {
+    //         repaint();
+
+    //         if (controller.nivelCompletado()) {
+
+    //             ResultadoNivel resultado = controller.finalizarNivelActual();
+
+    //             int nivelCompletado = controller.getNivelActual();
+    //             boolean haySiguiente = controller.haySiguienteNivel();
+
+    //             boolean continuar = mostrarPopupNivelCompletado(
+    //                     resultado,
+    //                     nivelCompletado,
+    //                     haySiguiente
+    //             );
+
+    //             if (haySiguiente && continuar) {
+    //                 controller.pasarAlSiguienteNivel();
+
+    //                 revalidate();
+    //                 repaint();
+    //             }
+    //         }
+    //     }
+    // }
 
     @Override
     public void doLayout() {

@@ -60,6 +60,11 @@ public class JuegoController{
         medidorNivel.iniciarNivel(gestorNiveles.getNivelActual(),factory.crearDificultadPorNivel());
     }
 
+    public void iniciarJuegoEnNivel(int nivel) {
+        gestorNiveles.setNivelActual(nivel);
+        cargarNivelActual();
+    }
+
     public boolean pasarAlSiguienteNivel() {
 
         boolean haySiguiente = gestorNiveles.siguienteNivel();
@@ -70,6 +75,11 @@ public class JuegoController{
         }
 
         return false;
+    }
+
+
+    public boolean nivelCompletado() {
+        return tablero.verificarVictoria();
     }
 
     public ResultadoNivel finalizarNivelActual() {
@@ -84,6 +94,7 @@ public class JuegoController{
     }
 
 
+    //Teclas
     public boolean moverArriba() {
         return moverJugador(-1, 0);
     }
@@ -105,11 +116,9 @@ public class JuegoController{
     }
 
 
-    public boolean nivelCompletado() {
-        return tablero.verificarVictoria();
-    }
 
-     public List<ObjetoView> getParedesView() {
+    //Views
+    public List<ObjetoView> getParedesView() {
         List<ObjetoView> vistas = new ArrayList<>();
 
         for (Pared pared : tablero.getParedes()) {
@@ -170,24 +179,32 @@ public class JuegoController{
         return vistas;
     }
 
-    public int getNivelActual() {
-        return gestorNiveles.getNivelActual();
-    }
+
 
     public void agregarObservadorBarra(ObserverBarraJuego observador) {
         medidorNivel.agregarObservador(observador);
     }
 
+    //Animacion de las cajas
+    public boolean hayCajaDeslizandose() {
+        return tablero.hayCajaDeslizandose();
+    }
+
+    public boolean deslizarCajaUnPaso() {
+        return tablero.deslizarCajaUnPaso();
+    }
+
+
+
     public String getNotasUltimoNivel() {
         return medidorNivel.getNotasUltimoNivel();
     }
 
-    public void iniciarJuegoEnNivel(int nivel) {
-        gestorNiveles.setNivelActual(nivel);
-        cargarNivelActual();
-    }
-
     public int getCantidadNiveles() {
         return gestorNiveles.getCantidadNiveles();
+    }
+
+    public int getNivelActual() {
+        return gestorNiveles.getNivelActual();
     }
 }

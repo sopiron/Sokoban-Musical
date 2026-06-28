@@ -17,6 +17,11 @@ public class Tablero {
     private MovimientoCaja movimientoNormal;
     private MovimientoCaja movimientoResbaladizo;
 
+    //Guarda qué caja se está deslizando actualmente.
+    private Caja cajaDeslizandose;
+    private int difFilaDeslizamiento; //Arriba o abajo
+    private int difColumnaDeslizamiento; //Derecha o izquierda
+
     public Tablero() {
         cajas = new ArrayList<>();
         paredes = new ArrayList<>();
@@ -76,6 +81,8 @@ public class Tablero {
         }
         return false; // El elemento nos bloqueó
     }
+
+
     // Este método revisa si todas las cajas están paradas exactamente sobre un destino
     public boolean verificarVictoria() {
 
@@ -99,6 +106,52 @@ public class Tablero {
         return cajasEnDestino == cajas.size();
     }
 
+    //---------------------------------------------------------
+    //
+    //Caja con efecto de deslizamiento
+    //
+    //---------------------------------------------------------
+
+    //Este método se llama cuando la caja toca el piso resbaladizo.
+    public void iniciarDeslizamiento(Caja caja, int difFila, int difColumna) {
+        this.cajaDeslizandose = caja;
+        this.difFilaDeslizamiento = difFila;
+        this.difColumnaDeslizamiento = difColumna;
+    }
+
+    public boolean hayCajaDeslizandose() {
+        return cajaDeslizandose != null;
+    }
+
+    public boolean deslizarCajaUnPaso() {
+        if (cajaDeslizandose == null) {
+            return false;
+        }
+
+        int siguienteFila = cajaDeslizandose.getPosicion().getFila() + difFilaDeslizamiento;
+        int siguienteColumna = cajaDeslizandose.getPosicion().getColumna() + difColumnaDeslizamiento;
+
+        ElementoInteractuable elementoSiguiente = obtenerElemento(
+                siguienteFila,
+                siguienteColumna
+        );
+
+        if (elementoSiguiente != null) {
+            detenerDeslizamiento();
+            return false;
+        }
+
+        cajaDeslizandose.setPosicion(
+                new Posicion(siguienteFila, siguienteColumna)
+        );
+
+        return true;
+    }
+
+    private void detenerDeslizamiento() {
+        cajaDeslizandose = null;
+    }
+
     public MovimientoCaja obtenerMovimientoCaja(int fila, int columna) {
         for (PisoResbaladizo piso : pisosResbaladizos) {
             if (piso.ocupa(fila, columna)) {
@@ -108,6 +161,7 @@ public class Tablero {
 
         return movimientoNormal;
     }
+
 
     public Jugador getJugador() {
         return jugador;
