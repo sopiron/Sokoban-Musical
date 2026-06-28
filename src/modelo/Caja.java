@@ -29,6 +29,7 @@ public class Caja implements ElementoInteractuable {
         // En el Sokoban clásico, la caja solo se mueve si la celda de atrás está totalmente vacía
         if (elementoDetras == null) {
             this.mover(difFila, difColumna);
+            tablero.registrarEmpuje();
             return true; // Se movió, deja que el jugador ocupe su lugar original
         }
 

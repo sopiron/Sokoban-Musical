@@ -1,6 +1,7 @@
 package modelo;
 
 import modelo.dificultad.DificultadPorNivel;
+import modelo.puntaje.CriterioPuntaje;
 
 public interface NivelFactory {
     Caja crearCaja(Posicion posicion);
@@ -10,4 +11,5 @@ public interface NivelFactory {
     void crearElemento(char simbolo, Posicion posicion, Tablero tablero);
     String getRutaMusicaFondo();
     DificultadPorNivel crearDificultadPorNivel();
+    CriterioPuntaje crearCriterioPuntaje();
 }

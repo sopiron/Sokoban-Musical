@@ -6,6 +6,8 @@ import java.util.function.BiConsumer;
 
 import modelo.dificultad.DificultadMedia;
 import modelo.dificultad.DificultadPorNivel;
+import modelo.puntaje.CriterioPuntaje;
+import modelo.puntaje.CriterioPuntajeSimple;
 
 public class NivelJazzFactory implements NivelFactory{
 
@@ -66,6 +68,11 @@ public class NivelJazzFactory implements NivelFactory{
     @Override
     public DificultadPorNivel crearDificultadPorNivel() {
         return new DificultadMedia();
+    }
+
+    @Override
+    public CriterioPuntaje crearCriterioPuntaje(){
+        return new CriterioPuntajeSimple();
     }
     
 }

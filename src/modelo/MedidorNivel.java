@@ -2,6 +2,7 @@ package modelo;
 
 import modelo.dificultad.DificultadPorNivel;
 import modelo.observer.ObserverBarraJuego;
+import modelo.puntaje.CriterioPuntaje;
 
 import java.util.ArrayList;
 import javax.swing.Timer;
@@ -44,17 +45,27 @@ public class MedidorNivel {
         notificar();
     }
 
-    public ResultadoNivel finalizarNivel() {
+    public ResultadoNivel finalizarNivel(EstadisticasNivel estadisticas, CriterioPuntaje criterioPuntaje) {
         int segundos = getSegundosTranscurridos();
         String notas = dificultadPorNivel.calcularNotas(segundos);
 
-        resultadoUltimoNivel = new ResultadoNivel(segundos, notas);
+        int puntajeFinal = criterioPuntaje.calcularPuntaje(
+            estadisticas,
+            segundos
+        );
 
         if (timer != null) {
             timer.stop();
         }
 
-        return resultadoUltimoNivel;
+        return new ResultadoNivel(
+            segundos,
+            notas,
+            estadisticas.getMovimientos(),
+            estadisticas.getEmpujes(),
+            estadisticas.getUsosUndo(),
+            puntajeFinal
+        );
     }
 
     public String getNotasUltimoNivel() {

@@ -281,14 +281,18 @@ public class JuegoPanel extends JPanel {
                 : "Finalizar juego";
 
         String mensaje =
-                "<html>" +
-                        "<div style='text-align:center; width:300px;'>" +
-                        "<h2>♪ Nivel " + nivelCompletado + " completado</h2>" +
-                        "<p><b>Tiempo:</b> " + resultado.getTiempoFormateado() + "</p>" +
-                        "<p><b>Notas obtenidas:</b></p>" +
-                        "<p style='font-size:28px; color:#E0AB4A;'>" + resultado.getNotas() + "</p>" +
-                        "</div>" +
-                        "</html>";
+            "<html>" +
+                    "<div style='text-align:center; width:330px;'>" +
+                    "<h2>♪ Nivel " + nivelCompletado + " completado</h2>" +
+                    "<p><b>Tiempo:</b> " + resultado.getTiempoFormateado() + "</p>" +
+                    "<p><b>Movimientos:</b> " + resultado.getMovimientos() + "</p>" +
+                    "<p><b>Empujes:</b> " + resultado.getEmpujes() + "</p>" +
+                    "<p><b>Uso de undo:</b> " + resultado.getUsosUndo() + "</p>" +
+                    "<p><b>Notas:</b></p>" +
+                    "<p style='font-size:28px; color:#E0AB4A;'>" + resultado.getNotas() + "</p>" +
+                    "<h2>Puntaje final: " + resultado.getPuntajeFinal() + "</h2>" +
+                    "</div>" +
+                    "</html>";
 
         int opcion = JOptionPane.showOptionDialog(
                 this,

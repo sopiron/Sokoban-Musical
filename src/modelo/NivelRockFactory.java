@@ -6,6 +6,8 @@ import java.util.function.BiConsumer;
 
 import modelo.dificultad.DificultadBaja;
 import modelo.dificultad.DificultadPorNivel;
+import modelo.puntaje.CriterioPuntaje;
+import modelo.puntaje.CriterioPuntajeSimple;
 
 public class NivelRockFactory implements NivelFactory{
 
@@ -66,6 +68,11 @@ public class NivelRockFactory implements NivelFactory{
     @Override
     public DificultadPorNivel crearDificultadPorNivel() {
         return new DificultadBaja();
+    }
+
+    @Override
+    public CriterioPuntaje crearCriterioPuntaje(){
+        return new CriterioPuntajeSimple();
     }
     
 }

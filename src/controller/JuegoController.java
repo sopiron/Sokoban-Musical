@@ -25,6 +25,7 @@ public class JuegoController{
     private GestorNiveles gestorNiveles;
     private NivelFactoryRegistry factoryRegistry;
     private MedidorNivel medidorNivel;
+    private NivelFactory factory;
 
     private JuegoController(){
         gestorNiveles = new GestorNiveles();
@@ -47,7 +48,7 @@ public class JuegoController{
     private void cargarNivelActual() {
         String genero = gestorNiveles.getGeneroNivelActual();
 
-        NivelFactory factory = factoryRegistry.obtenerFactory(genero);
+        factory = factoryRegistry.obtenerFactory(genero);
 
         NivelLoader loader = new NivelLoader(factory);
 
@@ -71,7 +72,10 @@ public class JuegoController{
     }
 
     public ResultadoNivel finalizarNivelActual() {
-        return medidorNivel.finalizarNivel();
+        return medidorNivel.finalizarNivel(
+            tablero.getEstadisticasNivel(),
+            factory.crearCriterioPuntaje()
+        );
     }
 
     public boolean haySiguienteNivel() {
