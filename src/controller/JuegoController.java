@@ -8,6 +8,7 @@ import modelo.MedidorNivel;
 import modelo.NivelFactory;
 import modelo.NivelFactoryRegistry;
 import modelo.Pared;
+import modelo.PisoResbaladizo;
 import modelo.ResultadoNivel;
 import modelo.Tablero;
 import modelo.observer.ObserverBarraJuego;
@@ -154,6 +155,19 @@ public class JuegoController{
                         jugador.getPosicion().getFila(),
                         jugador.getPosicion().getColumna()
                 ));
+    }
+
+    public List<ObjetoView> getPisosResbaladizosView() {
+        List<ObjetoView> vistas = new ArrayList<>();
+
+        for (PisoResbaladizo piso : tablero.getPisosResbaladizos()) {
+            vistas.add(new ObjetoView(
+                    piso.getPosicion().getFila(),
+                    piso.getPosicion().getColumna()
+            ));
+        }
+
+        return vistas;
     }
 
     public int getNivelActual() {

@@ -27,6 +27,7 @@ public class JuegoPanel extends JPanel {
     private Image imagenCaja;
     private Image imagenDestino;
     private Image imagenJugador;
+    private Image imagenPisoResbaladizo;
     private Map<String, Image> imagenesCache;
 
     private final int TAMANIO_CELDA = 85;
@@ -56,6 +57,7 @@ public class JuegoPanel extends JPanel {
         imagenCaja = cargarImagen("/images/cajaGuitarra.png");
         imagenDestino = cargarImagen("/images/destino.png");
         imagenJugador = cargarImagen("/images/personaje.png");
+        imagenPisoResbaladizo = cargarImagen("/images/pisoResbaladizo.png");
     }
 
     private Image cargarImagen(String ruta) {
@@ -151,12 +153,14 @@ public class JuegoPanel extends JPanel {
         List<ObjetoView> paredes = controller.getParedesView();
         List<ObjetoView> cajas = controller.getCajasView();
         List<ObjetoView> destinos = controller.getDestinosView();
+        List<ObjetoView> pisosResbaladizos = controller.getPisosResbaladizosView();
         Optional<ObjetoView> jugadorOpt = controller.getJugadorView();
 
         List<ObjetoView> todos = new ArrayList<>();
         todos.addAll(paredes);
         todos.addAll(cajas);
         todos.addAll(destinos);
+        todos.addAll(pisosResbaladizos);
         jugadorOpt.ifPresent(todos::add);
 
         if (todos.isEmpty()) {
@@ -203,6 +207,23 @@ public class JuegoPanel extends JPanel {
 
                 g.drawImage(imagenPiso, x, y, TAMANIO_CELDA, TAMANIO_CELDA, this);
             }
+        }
+
+        // 1.5. Dibujar piso resbaladizo en toda la grilla
+        for (ObjetoView pisoResbaladizo : pisosResbaladizos) {
+            int x = offsetX + (pisoResbaladizo.getColumna() - minCol) * TAMANIO_CELDA;
+            int y = offsetY + (pisoResbaladizo.getFila() - minFila) * TAMANIO_CELDA;
+
+            int margen = 0;
+
+            g.drawImage(
+                    imagenPisoResbaladizo,
+                    x + margen,
+                    y + margen,
+                    TAMANIO_CELDA - margen * 2,
+                    TAMANIO_CELDA - margen * 2,
+                    this
+            );
         }
 
         // 2. Dibujar destinos

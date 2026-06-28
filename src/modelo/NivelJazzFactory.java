@@ -31,6 +31,10 @@ public class NivelJazzFactory implements NivelFactory{
         creadores.put('@', (posicion, tablero) ->
                 tablero.setJugador(crearJugador(posicion))
         );
+
+        creadores.put('~', (posicion, tablero) ->
+            tablero.getPisosResbaladizos().add(crearPisoResbaladizo(posicion))
+        );
     }
 
      @Override
@@ -51,6 +55,11 @@ public class NivelJazzFactory implements NivelFactory{
     @Override
     public Jugador crearJugador(Posicion posicion) {
         return new Jugador(posicion);
+    }
+
+    @Override
+    public PisoResbaladizo crearPisoResbaladizo(Posicion posicion) {
+        return new PisoResbaladizo(posicion);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package modelo;
 
+import modelo.movimientoCaja.MovimientoCaja;
+
 public class Caja implements ElementoInteractuable {
     private Posicion posicion;
     private String rutaImagen;
@@ -23,17 +25,12 @@ public class Caja implements ElementoInteractuable {
         int destinoFila = this.posicion.getFila() + difFila;
         int destinoCol = this.posicion.getColumna() + difColumna;
 
-        // La caja le pregunta al tablero qué hay en la celda a la que quiere ir
-        ElementoInteractuable elementoDetras = tablero.obtenerElemento(destinoFila, destinoCol);
+        MovimientoCaja estrategia = tablero.obtenerMovimientoCaja(
+            destinoFila,
+            destinoCol
+        );
 
-        // En el Sokoban clásico, la caja solo se mueve si la celda de atrás está totalmente vacía
-        if (elementoDetras == null) {
-            this.mover(difFila, difColumna);
-            tablero.registrarEmpuje();
-            return true; // Se movió, deja que el jugador ocupe su lugar original
-        }
-
-        return false; // Atrás hay una pared u otra caja, bloquea el movimiento
+        return estrategia.mover(this, difFila, difColumna, tablero);
     }
 
     public String getRutaImagen() {

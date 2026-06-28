@@ -2,6 +2,10 @@ package modelo;
 
 import java.util.ArrayList;
 
+import modelo.movimientoCaja.MovimientoCaja;
+import modelo.movimientoCaja.MovimientoNormal;
+import modelo.movimientoCaja.MovimientoResbaladizo;
+
 public class Tablero {
 
     private EstadisticasNivel estadisticasNivel;
@@ -9,13 +13,19 @@ public class Tablero {
     private ArrayList<Caja> cajas;
     private ArrayList<Pared> paredes;
     private ArrayList<Destino> destinos;
+    private ArrayList<PisoResbaladizo> pisosResbaladizos;
+    private MovimientoCaja movimientoNormal;
+    private MovimientoCaja movimientoResbaladizo;
 
     public Tablero() {
         cajas = new ArrayList<>();
         paredes = new ArrayList<>();
         destinos = new ArrayList<>();
+        pisosResbaladizos = new ArrayList<>();
 
         estadisticasNivel = new EstadisticasNivel();
+        movimientoNormal = new MovimientoNormal();
+        movimientoResbaladizo = new MovimientoResbaladizo();
     }
 
     public void registrarEmpuje() {
@@ -89,7 +99,15 @@ public class Tablero {
         return cajasEnDestino == cajas.size();
     }
 
+    public MovimientoCaja obtenerMovimientoCaja(int fila, int columna) {
+        for (PisoResbaladizo piso : pisosResbaladizos) {
+            if (piso.ocupa(fila, columna)) {
+                return movimientoResbaladizo;
+            }
+        }
 
+        return movimientoNormal;
+    }
 
     public Jugador getJugador() {
         return jugador;
@@ -125,6 +143,10 @@ public class Tablero {
 
     public EstadisticasNivel getEstadisticasNivel() {
         return estadisticasNivel;
+    }
+
+    public ArrayList<PisoResbaladizo> getPisosResbaladizos() {
+        return pisosResbaladizos;
     }
 
 }

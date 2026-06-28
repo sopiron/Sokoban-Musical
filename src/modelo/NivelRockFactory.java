@@ -31,6 +31,10 @@ public class NivelRockFactory implements NivelFactory{
         creadores.put('@', (posicion, tablero) ->
                 tablero.setJugador(crearJugador(posicion))
         );
+
+        creadores.put('~', (posicion, tablero) ->
+            tablero.getPisosResbaladizos().add(crearPisoResbaladizo(posicion))
+        );
     }
 
     @Override
@@ -58,6 +62,11 @@ public class NivelRockFactory implements NivelFactory{
         creadores
                 .getOrDefault(simbolo, (p, t) -> {})
                 .accept(posicion, tablero);
+    }
+
+    @Override
+    public PisoResbaladizo crearPisoResbaladizo(Posicion posicion) {
+        return new PisoResbaladizo(posicion);
     }
 
     @Override

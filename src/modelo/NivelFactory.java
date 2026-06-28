@@ -9,6 +9,7 @@ public interface NivelFactory {
     Destino crearDestino(Posicion posicion);
     Jugador crearJugador(Posicion posicion);
     void crearElemento(char simbolo, Posicion posicion, Tablero tablero);
+    PisoResbaladizo crearPisoResbaladizo(Posicion posicion);
     String getRutaMusicaFondo();
     DificultadPorNivel crearDificultadPorNivel();
     CriterioPuntaje crearCriterioPuntaje();
