@@ -3,6 +3,7 @@ package modelo;
 import java.util.ArrayList;
 import java.util.List;
 
+import modelo.estadoCajaGuardaddo.EstadoCajaGuardado;
 import modelo.movimientoCaja.MovimientoCaja;
 import modelo.movimientoCaja.MovimientoNormal;
 import modelo.movimientoCaja.MovimientoResbaladizo;
@@ -207,26 +208,20 @@ public class Tablero {
     // ── Memento ────────────────────────────────────────────────────────────────
 
     public TableroMemento guardarMemento() {
-        List<Posicion> posCajas = new ArrayList<>();
-        for (Caja caja : cajas) {
-            posCajas.add(new Posicion(
-                    caja.getPosicion().getFila(),
-                    caja.getPosicion().getColumna()
-            ));
-        }
-        Posicion posJugador = new Posicion(
-                jugador.getPosicion().getFila(),
-                jugador.getPosicion().getColumna()
-        );
-        return new TableroMemento(posCajas, posJugador);
-    }
+    return new TableroMemento(cajas, jugador.getPosicion());
+}
 
     public void restaurarMemento(TableroMemento memento) {
-        List<Posicion> posCajas = memento.getPosicionesCajas();
-        for (int i = 0; i < cajas.size() && i < posCajas.size(); i++) {
-            cajas.get(i).setPosicion(posCajas.get(i));
-        }
         jugador.setPosicion(memento.getPosicionJugador());
+
+        cajas.clear();
+
+        for (EstadoCajaGuardado estadoCaja : memento.getEstadosCajas()) {
+            estadoCaja.restaurar();
+            cajas.add(estadoCaja.getCaja());
+        }
+
+        cajaDeslizandose = null;
     }
 
     public boolean deshacerMovimiento() {

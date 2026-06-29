@@ -1,5 +1,7 @@
 package modelo;
 
+import modelo.estadoCajaGuardaddo.EstadoCajaGuardado;
+import modelo.estadoCajaGuardaddo.EstadoCajaNormalGuardado;
 import modelo.movimientoCaja.MovimientoCaja;
 
 public class Caja implements ElementoInteractuable {
@@ -35,5 +37,9 @@ public class Caja implements ElementoInteractuable {
 
     public String getRutaImagen() {
         return rutaImagen;
+    }
+
+    public EstadoCajaGuardado guardarEstado() {
+        return new EstadoCajaNormalGuardado(this);
     }
 }
