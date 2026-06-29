@@ -10,8 +10,10 @@ import javax.sound.sampled.FloatControl;
 public class GestorSonido {
 
     private static GestorSonido gestorSonido;
+    
     private Clip musicaActual;
     private String rutaActual;
+    private boolean muteado = false;
 
     private GestorSonido(){}
 
@@ -53,12 +55,51 @@ public class GestorSonido {
     }
 
     public void setMutear(boolean mutear) {
-        if (musicaActual == null) return;
+        this.muteado = mutear;
+        aplicarMuteAMusica();
+    }
+
+    private void aplicarMuteAMusica() {
+        if (musicaActual == null) {
+            return;
+        }
+
         try {
-            FloatControl volumen = (FloatControl) musicaActual.getControl(FloatControl.Type.MASTER_GAIN);
-            volumen.setValue(mutear ? volumen.getMinimum() : 0.0f);
+            FloatControl volumen = (FloatControl) musicaActual.getControl(
+                    FloatControl.Type.MASTER_GAIN
+            );
+
+            if (muteado) {
+                volumen.setValue(volumen.getMinimum());
+            } else {
+                volumen.setValue(0.0f);
+            }
+
         } catch (Exception e) {
-            // Si el control no está disponible, ignoramos
+            // Si el control de volumen no está disponible, lo ignoramos.
+        }
+    }
+
+    public void reproducirEfecto(String ruta) {
+        if (muteado) {
+            return;
+        }
+
+        try {
+            URL url = getClass().getResource(ruta);
+
+            if (url == null) {
+                throw new IllegalArgumentException("No se encontró el sonido: " + ruta);
+            }
+
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
+
+            Clip efecto = AudioSystem.getClip();
+            efecto.open(audioInputStream);
+            efecto.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

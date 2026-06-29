@@ -198,6 +198,10 @@ public class Tablero {
         }
 
         cajas.remove(caja);
+
+        GestorSonido.getInstance().reproducirEfecto(
+                "/sounds/romperInstrumento.wav"
+        );
     }
 
     // ── Memento ────────────────────────────────────────────────────────────────
