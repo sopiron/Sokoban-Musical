@@ -95,24 +95,27 @@ public class Tablero {
     // Este método revisa si todas las cajas están paradas exactamente sobre un destino
     public boolean verificarVictoria() {
 
-        if (cajas.isEmpty() || destinos.isEmpty()) {
+        if (destinos.isEmpty()) {
             return false;
         }
 
-        int cajasEnDestino = 0;
+        for (Destino destino : destinos) {
+            boolean destinoOcupado = false;
 
-        for (Caja caja : cajas) {
-            for (Destino destino : destinos) {
+            for (Caja caja : cajas) {
                 if (caja.getPosicion().getFila() == destino.getPosicion().getFila() &&
-                        caja.getPosicion().getColumna() == destino.getPosicion().getColumna()) {
-                    cajasEnDestino++;
+                    caja.getPosicion().getColumna() == destino.getPosicion().getColumna()) {
+                    destinoOcupado = true;
                     break;
                 }
             }
+
+            if (!destinoOcupado) {
+                return false;
+            }
         }
 
-        // Si la cantidad de cajas en destino coincide con el total de cajas, devuelve true (ganaste)
-        return cajasEnDestino == cajas.size();
+        return true;
     }
 
     public boolean esDestino(int fila, int columna) {
@@ -178,6 +181,7 @@ public class Tablero {
         cajaDeslizandose = null;
     }
 
+    //Ver el tipo de movimiento de la caja
     public MovimientoCaja obtenerMovimientoCaja(int fila, int columna) {
         for (PisoResbaladizo piso : pisosResbaladizos) {
             if (piso.ocupa(fila, columna)) {
@@ -186,6 +190,14 @@ public class Tablero {
         }
 
         return movimientoNormal;
+    }
+
+    public void romperCaja(Caja caja) {
+        if (caja == cajaDeslizandose) {
+            detenerDeslizamiento();
+        }
+
+        cajas.remove(caja);
     }
 
     // ── Memento ────────────────────────────────────────────────────────────────

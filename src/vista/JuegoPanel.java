@@ -1,7 +1,6 @@
 package vista;
 
 import controller.JuegoController;
-import modelo.GestorSonido;
 import modelo.ResultadoNivel;
 import views.ObjetoView;
 

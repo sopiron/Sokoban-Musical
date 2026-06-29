@@ -35,6 +35,10 @@ public class NivelJazzFactory implements NivelFactory{
         creadores.put('~', (posicion, tablero) ->
             tablero.getPisosResbaladizos().add(crearPisoResbaladizo(posicion))
         );
+
+        creadores.put('F', (posicion, tablero) ->
+            tablero.getCajas().add(crearCajaFragil(posicion))
+        );
     }
 
      @Override
@@ -60,6 +64,11 @@ public class NivelJazzFactory implements NivelFactory{
     @Override
     public PisoResbaladizo crearPisoResbaladizo(Posicion posicion) {
         return new PisoResbaladizo(posicion);
+    }
+
+    @Override
+    public Caja crearCajaFragil(Posicion posicion) {
+        return new CajaFragil(posicion);
     }
 
     @Override
