@@ -12,6 +12,7 @@ public class GestorSonido {
     private static GestorSonido gestorSonido;
     private Clip musicaActual;
     private String rutaActual;
+    private boolean muteado = false;
 
     private GestorSonido(){}
 
@@ -19,7 +20,6 @@ public class GestorSonido {
         if (gestorSonido == null){
             gestorSonido = new GestorSonido();
         }
-
         return gestorSonido;
     }
 
@@ -40,6 +40,9 @@ public class GestorSonido {
             musicaActual.loop(Clip.LOOP_CONTINUOUSLY);
             musicaActual.start();
 
+            // Aplicamos el estado de muteo actual al nuevo clip
+            aplicarMuteo();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,10 +56,15 @@ public class GestorSonido {
     }
 
     public void setMutear(boolean mutear) {
+        this.muteado = mutear;
+        aplicarMuteo();
+    }
+
+    private void aplicarMuteo() {
         if (musicaActual == null) return;
         try {
             FloatControl volumen = (FloatControl) musicaActual.getControl(FloatControl.Type.MASTER_GAIN);
-            volumen.setValue(mutear ? volumen.getMinimum() : 0.0f);
+            volumen.setValue(muteado ? volumen.getMinimum() : 0.0f);
         } catch (Exception e) {
             // Si el control no está disponible, ignoramos
         }

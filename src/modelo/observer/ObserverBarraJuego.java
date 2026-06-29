@@ -1,5 +1,5 @@
 package modelo.observer;
 
 public interface ObserverBarraJuego {
-    void actualizarBarra(int nivel, int segundos, String notas);
+    void actualizarBarra(int nivel, int segundos, String notas, int movimientos, int empujes);
 }

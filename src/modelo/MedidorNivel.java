@@ -80,8 +80,8 @@ public class MedidorNivel {
         String notas = dificultadPorNivel.calcularNotas(segundos);
 
         int puntajeFinal = criterioPuntaje.calcularPuntaje(
-            estadisticas,
-            segundos
+                estadisticas,
+                segundos
         );
 
         if (timer != null) {
@@ -89,12 +89,12 @@ public class MedidorNivel {
         }
 
         return new ResultadoNivel(
-            segundos,
-            notas,
-            estadisticas.getMovimientos(),
-            estadisticas.getEmpujes(),
-            estadisticas.getUsosUndo(),
-            puntajeFinal
+                segundos,
+                notas,
+                estadisticas.getMovimientos(),
+                estadisticas.getEmpujes(),
+                estadisticas.getUsosUndo(),
+                puntajeFinal
         );
     }
 
@@ -110,16 +110,27 @@ public class MedidorNivel {
         return dificultadPorNivel.calcularNotas(getSegundosTranscurridos());
     }
 
+    private EstadisticasNivel estadisticasNivel;
+
+    public void setEstadisticasNivel(EstadisticasNivel estadisticasNivel) {
+        this.estadisticasNivel = estadisticasNivel;
+    }
+
     private void notificar() {
-        if (dificultadPorNivel == null) {
-            return;
-        }
+        if (dificultadPorNivel == null) return;
+
         int segundos = getSegundosTranscurridos();
         String notas = calcularNotas();
+        int movimientos = estadisticasNivel != null ? estadisticasNivel.getMovimientos() : 0;
+        int empujes = estadisticasNivel != null ? estadisticasNivel.getEmpujes() : 0;
 
         for (ObserverBarraJuego observador : observadores) {
-            observador.actualizarBarra(nivelActual, segundos, notas);
+            observador.actualizarBarra(nivelActual, segundos, notas, movimientos, empujes);
         }
+    }
+
+    public void notificarAhora() {
+        notificar();
     }
 
     public ResultadoNivel getResultadoUltimoNivel() {

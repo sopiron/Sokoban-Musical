@@ -31,11 +31,13 @@ public class BarraPuntos extends JPanel implements ObserverBarraJuego {
     }
 
     @Override
-    public void actualizarBarra(int nivel, int segundos, String notas) {
+    public void actualizarBarra(int nivel, int segundos, String notas, int movimientos, int empujes) {
         texto.setText(
                 "♪ Nivel " + nivel +
-                "   |   Tiempo: " + formatearTiempo(segundos) +
-                "   |   Notas: " + notas
+                        "   |   Tiempo: " + formatearTiempo(segundos) +
+                        "   |   Mov: " + movimientos +
+                        "   |   Emp: " + empujes +
+                        "   |   Notas: " + notas
         );
     }
 

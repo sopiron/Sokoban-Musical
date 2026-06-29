@@ -57,7 +57,8 @@ public class JuegoController{
 
         GestorSonido.getInstance().reproducirMusica(factory.getRutaMusicaFondo());
 
-        medidorNivel.iniciarNivel(gestorNiveles.getNivelActual(),factory.crearDificultadPorNivel());
+        medidorNivel.iniciarNivel(gestorNiveles.getNivelActual(), factory.crearDificultadPorNivel());
+        medidorNivel.setEstadisticasNivel(tablero.getEstadisticasNivel());
     }
 
     public void iniciarJuegoEnNivel(int nivel) {
@@ -112,7 +113,9 @@ public class JuegoController{
     }
 
     private boolean moverJugador(int difFila, int difColumna) {
-        return tablero.moverJugador(difFila, difColumna);
+        boolean seMovio = tablero.moverJugador(difFila, difColumna);
+        if (seMovio) medidorNivel.notificarAhora(); // ← nuevo
+        return seMovio;
     }
 
 

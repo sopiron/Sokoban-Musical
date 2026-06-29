@@ -36,7 +36,7 @@ public class JuegoPanel extends JPanel {
     private Timer timerDeslizamiento;
     private boolean animandoDeslizamiento;
 
-    private final int TAMANIO_CELDA = 85;
+    private final int TAMANIO_CELDA = 55;
 
     public JuegoPanel(JuegoController controller) {
         this.controller = controller;
@@ -350,7 +350,7 @@ public class JuegoPanel extends JPanel {
             int x = offsetX + (pared.getColumna() - minCol) * TAMANIO_CELDA;
             int y = offsetY + (pared.getFila() - minFila) * TAMANIO_CELDA;
 
-            int margenPared = -15;
+            int margenPared = -10;
 
             g.drawImage(
                     imagenPared,
