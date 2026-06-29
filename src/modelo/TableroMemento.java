@@ -18,13 +18,28 @@ public class TableroMemento {
     // Posición del jugador
     private final Posicion posicionJugador;
 
-    TableroMemento(List<Caja> cajas, Posicion posicionJugador) {
+    private final List<Boolean> estadosCerrojos;
+    private final List<Boolean> estadosMuros;
+
+    TableroMemento(List<Caja> cajas, Posicion posicionJugador, List<Cerrojo> cerrojos, List<MuroCerrado> murosCerrados) {
 
         this.estadosCajas = new ArrayList<>();
 
         // Copiamos defensivamente para que nadie pueda mutar el snapshot
         for (Caja caja : cajas) {
             this.estadosCajas.add(caja.guardarEstado());
+        }
+
+        this.estadosCerrojos = new ArrayList<>();
+
+        for (Cerrojo cerrojo : cerrojos) {
+            this.estadosCerrojos.add(cerrojo.estaActivado());
+        }
+
+        this.estadosMuros = new ArrayList<>();
+
+        for (MuroCerrado muro : murosCerrados) {
+            this.estadosMuros.add(muro.estaAbierto());
         }
 
         this.posicionJugador = new Posicion(
@@ -39,5 +54,13 @@ public class TableroMemento {
 
     Posicion getPosicionJugador() {
         return posicionJugador;
+    }
+
+    List<Boolean> getEstadosCerrojos() {
+        return new ArrayList<>(estadosCerrojos);
+    }
+
+    List<Boolean> getEstadosMuros() {
+        return new ArrayList<>(estadosMuros);
     }
 }

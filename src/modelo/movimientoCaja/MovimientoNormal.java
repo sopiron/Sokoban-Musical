@@ -24,6 +24,8 @@ public class MovimientoNormal implements MovimientoCaja {
         caja.setPosicion(new Posicion(nuevaFila, nuevaColumna));
         tablero.registrarEmpuje();
 
+        caja.alTerminarMovimiento(tablero);
+
         return true;
     }
 }

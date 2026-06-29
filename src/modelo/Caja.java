@@ -42,4 +42,12 @@ public class Caja implements ElementoInteractuable {
     public EstadoCajaGuardado guardarEstado() {
         return new EstadoCajaNormalGuardado(this);
     }
+
+    public void alTerminarMovimiento(Tablero tablero) {
+        // Por defecto, una caja normal no hace nada especial.
+    }
+
+    public boolean cuentaParaDestino() {
+        return true;
+    }
 }

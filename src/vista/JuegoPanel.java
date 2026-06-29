@@ -30,6 +30,7 @@ public class JuegoPanel extends JPanel {
     private Image imagenDestino;
     private Image imagenJugador;
     private Image imagenPisoResbaladizo;
+    private Image imagenCerrojo;
     private Map<String, Image> imagenesCache;
 
     private Timer timerDeslizamiento;
@@ -76,6 +77,7 @@ public class JuegoPanel extends JPanel {
         imagenDestino = cargarImagen("/images/destino.png");
         imagenJugador = cargarImagen("/images/personaje.png");
         imagenPisoResbaladizo = cargarImagen("/images/pisoResbaladizo.png");
+        imagenCerrojo = cargarImagen("/images/cerrojo.png");
     }
 
     private Image cargarImagen(String ruta) {
@@ -264,6 +266,7 @@ public class JuegoPanel extends JPanel {
         List<ObjetoView> cajas = controller.getCajasView();
         List<ObjetoView> destinos = controller.getDestinosView();
         List<ObjetoView> pisosResbaladizos = controller.getPisosResbaladizosView();
+        List<ObjetoView> cerrojos = controller.getCerrojosView();
         Optional<ObjetoView> jugadorOpt = controller.getJugadorView();
 
         List<ObjetoView> todos = new ArrayList<>();
@@ -271,6 +274,7 @@ public class JuegoPanel extends JPanel {
         todos.addAll(cajas);
         todos.addAll(destinos);
         todos.addAll(pisosResbaladizos);
+        todos.addAll(cerrojos);
         jugadorOpt.ifPresent(todos::add);
 
         if (todos.isEmpty()) {
@@ -299,23 +303,67 @@ public class JuegoPanel extends JPanel {
         int offsetX = (getWidth() - anchoTablero) / 2;
         int offsetY = (getHeight() - altoTablero) / 2;
 
-        g.setColor(new Color(0, 0, 0, 90));
-        g.fillRoundRect(
-                offsetX - 20,
-                offsetY - 20,
-                anchoTablero + 40,
-                altoTablero + 40,
-                30,
-                30
-        );
+        // 1. Dibujar piso solamente en las filas que tienen contenido
+        Map<Integer, int[]> limitesPorFila = new HashMap<>();
 
-        // 1. Dibujar piso en toda la grilla
-        for (int fila = 0; fila < filas; fila++) {
-            for (int col = 0; col < columnas; col++) {
-                int x = offsetX + col * TAMANIO_CELDA;
-                int y = offsetY + fila * TAMANIO_CELDA;
+        for (ObjetoView obj : todos) {
+            int fila = obj.getFila();
+            int columna = obj.getColumna();
 
-                g.drawImage(imagenPiso, x, y, TAMANIO_CELDA, TAMANIO_CELDA, this);
+            limitesPorFila.putIfAbsent(
+                    fila,
+                    new int[] { Integer.MAX_VALUE, Integer.MIN_VALUE }
+            );
+
+            int[] limites = limitesPorFila.get(fila);
+
+            if (columna < limites[0]) {
+                limites[0] = columna;
+            }
+
+            if (columna > limites[1]) {
+                limites[1] = columna;
+            }
+        }
+
+        // Sombra siguiendo la forma del nivel
+        Graphics2D g2 = (Graphics2D) g.create();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setColor(new Color(0, 0, 0, 75));
+
+        for (Map.Entry<Integer, int[]> entrada : limitesPorFila.entrySet()) {
+            int filaReal = entrada.getKey();
+            int colMinFila = entrada.getValue()[0];
+            int colMaxFila = entrada.getValue()[1];
+
+            int x = offsetX + (colMinFila - minCol) * TAMANIO_CELDA - 12;
+            int y = offsetY + (filaReal - minFila) * TAMANIO_CELDA - 12;
+
+            int ancho = (colMaxFila - colMinFila + 1) * TAMANIO_CELDA + 24;
+            int alto = TAMANIO_CELDA + 24;
+
+            g2.fillRoundRect(x, y, ancho, alto, 18, 18);
+        }
+
+        g2.dispose();
+
+        for (Map.Entry<Integer, int[]> entrada : limitesPorFila.entrySet()) {
+            int filaReal = entrada.getKey();
+            int colMinFila = entrada.getValue()[0];
+            int colMaxFila = entrada.getValue()[1];
+
+            for (int colReal = colMinFila; colReal <= colMaxFila; colReal++) {
+                int x = offsetX + (colReal - minCol) * TAMANIO_CELDA;
+                int y = offsetY + (filaReal - minFila) * TAMANIO_CELDA;
+
+                g.drawImage(
+                        imagenPiso,
+                        x,
+                        y,
+                        TAMANIO_CELDA,
+                        TAMANIO_CELDA,
+                        this
+                );
             }
         }
 
@@ -346,17 +394,41 @@ public class JuegoPanel extends JPanel {
 
         // 3. Dibujar paredes
         for (ObjetoView pared : paredes) {
+            if (pared.getRutaImagen() == null || pared.getRutaImagen().isEmpty()) {
+                continue;
+            }
+
             int x = offsetX + (pared.getColumna() - minCol) * TAMANIO_CELDA;
             int y = offsetY + (pared.getFila() - minFila) * TAMANIO_CELDA;
 
-            int margenPared = -15;
+            Image imagenParedActual = obtenerImagenDesdeRuta(
+                    pared.getRutaImagen(),
+                    imagenPared
+            );
+
+            int margenPared = -10;
 
             g.drawImage(
-                    imagenPared,
+                    imagenParedActual,
                     x + margenPared,
                     y + margenPared,
                     TAMANIO_CELDA - margenPared * 2,
                     TAMANIO_CELDA - margenPared * 2,
+                    this
+            );
+        }
+
+        // Dibujar cerrojos
+        for (ObjetoView cerrojo : cerrojos) {
+            int x = offsetX + (cerrojo.getColumna() - minCol) * TAMANIO_CELDA;
+            int y = offsetY + (cerrojo.getFila() - minFila) * TAMANIO_CELDA;
+
+            g.drawImage(
+                    imagenCerrojo,
+                    x,
+                    y,
+                    TAMANIO_CELDA,
+                    TAMANIO_CELDA,
                     this
             );
         }
