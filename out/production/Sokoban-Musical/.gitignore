@@ -1,0 +1,15 @@
+# Archivos compilados
+*.class
+target/
+out/
+build/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
