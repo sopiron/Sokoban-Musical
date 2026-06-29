@@ -245,4 +245,12 @@ public class JuegoController{
     public int getNivelActual() {
         return gestorNiveles.getNivelActual();
     }
+
+    public void detenerMusica() {
+        GestorSonido.getInstance().detenerMusica();
+    }
+
+    public void setMutearMusica(boolean mutear) {
+        GestorSonido.getInstance().setMutear(mutear);
+    }
 }

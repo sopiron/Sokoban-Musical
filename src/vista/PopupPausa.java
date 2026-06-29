@@ -43,15 +43,19 @@ public class PopupPausa extends JDialog {
         panel.setLayout(null);
 
         // ── Botón cerrar (✕) arriba a la derecha ──
-        JButton btnCerrar = new JButton("X");
-        btnCerrar.setFont(new Font("SansSerif", Font.BOLD, 16));
+        JLabel btnCerrar = new JLabel("✕", SwingConstants.CENTER);
+        btnCerrar.setFont(new Font("SansSerif", Font.BOLD, 22));
         btnCerrar.setForeground(new Color(224, 171, 74));
-        btnCerrar.setContentAreaFilled(false);
-        btnCerrar.setBorderPainted(false);
-        btnCerrar.setFocusPainted(false);
         btnCerrar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnCerrar.setBounds(370, 15, 35, 35);
-        btnCerrar.addActionListener(e -> cerrar(controller));
+
+        btnCerrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                cerrar(controller);
+            }
+        });
+
         panel.add(btnCerrar);
 
         // ── Título ──
@@ -71,7 +75,7 @@ public class PopupPausa extends JDialog {
 
         // ── Botón Reiniciar nivel ──
         BotonRedondeado btnReiniciar = new BotonRedondeado(
-                "🔄  Reiniciar nivel",
+                "↻  Reiniciar nivel",
                 new Color(91, 53, 29),
                 new Color(166, 103, 45)
         );
@@ -85,25 +89,25 @@ public class PopupPausa extends JDialog {
 
         // ── Botón Silenciar música ──
         btnMusica = new BotonRedondeado(
-                "🔊  Silenciar música",
+                "♪  Silenciar música",
                 new Color(91, 53, 29),
                 new Color(166, 103, 45)
         );
         btnMusica.setBounds(60, 215, 300, 50);
         btnMusica.setFocusable(false);
-        btnMusica.addActionListener(e -> toggleMusica());
+        btnMusica.addActionListener(e -> toggleMusica(controller));
         panel.add(btnMusica);
 
         // ── Botón Menú principal ──
         BotonRedondeado btnMenu = new BotonRedondeado(
-                "🏠  Menú principal",
+                "⌂  Menú principal",
                 new Color(91, 53, 29),
                 new Color(166, 103, 45)
         );
         btnMenu.setBounds(60, 280, 300, 50);
         btnMenu.setFocusable(false);
         btnMenu.addActionListener(e -> {
-            GestorSonido.getInstance().detenerMusica();
+            controller.detenerMusica();;
             dispose();
             alVolverAlMenu.run();
         });
@@ -125,17 +129,17 @@ public class PopupPausa extends JDialog {
         dispose();
     }
 
-    private void toggleMusica() {
+    private void toggleMusica(JuegoController controller) {
         musicaActiva = !musicaActiva;
         if (musicaActiva) {
-            btnMusica.setText("🔊  Silenciar música");
+            btnMusica.setText("♪  Silenciar música");
             // Reanudar música — el controller/gestor sabe qué pista estaba sonando
             // Como GestorSonido no tiene "reanudar", lo más simple es no hacer nada
             // (la música nunca se detuvo, solo la silenciamos con el volumen)
-            GestorSonido.getInstance().setMutear(false);
+            controller.setMutearMusica(false);
         } else {
-            btnMusica.setText("🔇  Activar música");
-            GestorSonido.getInstance().setMutear(true);
+            btnMusica.setText("♫  Activar música");
+            controller.setMutearMusica(true);
         }
     }
 }

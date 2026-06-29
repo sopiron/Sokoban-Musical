@@ -1,6 +1,7 @@
 package vista;
 
 import controller.JuegoController;
+import modelo.GestorSonido;
 import modelo.ResultadoNivel;
 import views.ObjetoView;
 
@@ -217,22 +218,25 @@ public class JuegoPanel extends JPanel {
             int nivelCompletado = controller.getNivelActual();
             boolean haySiguiente = controller.haySiguienteNivel();
 
-            boolean continuar = mostrarPopupNivelCompletado(
+            AccionPopupNivel accion = mostrarPopupNivelCompletado(
                     resultado,
                     nivelCompletado,
                     haySiguiente
             );
 
-            if (haySiguiente && continuar) {
+            if (accion == AccionPopupNivel.SIGUIENTE && haySiguiente) {
                 controller.pasarAlSiguienteNivel();
-
-                barraUndo.resetearUsos();
 
                 revalidate();
                 repaint();
             }
+
+            if (accion == AccionPopupNivel.HOME) {
+                volverAlMenuPrincipal();
+            }
         }
     }
+
     @Override
     public void doLayout() {
         super.doLayout();
@@ -399,41 +403,35 @@ public class JuegoPanel extends JPanel {
         }
     }
 
-    private boolean mostrarPopupNivelCompletado(
+   private AccionPopupNivel mostrarPopupNivelCompletado(
         ResultadoNivel resultado,
         int nivelCompletado,
         boolean haySiguiente
     ) {
-        String textoBoton = haySiguiente
-                ? "Pasar al próximo nivel"
-                : "Finalizar juego";
+        JFrame ventana = (JFrame) SwingUtilities.getWindowAncestor(this);
 
-        String mensaje =
-            "<html>" +
-                    "<div style='text-align:center; width:330px;'>" +
-                    "<h2>♪ Nivel " + nivelCompletado + " completado</h2>" +
-                    "<p><b>Tiempo:</b> " + resultado.getTiempoFormateado() + "</p>" +
-                    "<p><b>Movimientos:</b> " + resultado.getMovimientos() + "</p>" +
-                    "<p><b>Empujes:</b> " + resultado.getEmpujes() + "</p>" +
-                    "<p><b>Uso de undo:</b> " + resultado.getUsosUndo() + "</p>" +
-                    "<p><b>Notas:</b></p>" +
-                    "<p style='font-size:28px; color:#E0AB4A;'>" + resultado.getNotas() + "</p>" +
-                    "<h2>Puntaje final: " + resultado.getPuntajeFinal() + "</h2>" +
-                    "</div>" +
-                    "</html>";
-
-        int opcion = JOptionPane.showOptionDialog(
-                this,
-                mensaje,
-                "Resultado del nivel",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                new Object[]{textoBoton},
-                textoBoton
+        PopupResultadoNivel popup = new PopupResultadoNivel(
+                ventana,
+                resultado,
+                nivelCompletado,
+                haySiguiente
         );
 
-        return opcion == 0;
+        popup.setVisible(true);
+
+        return popup.getAccionSeleccionada();
+    }
+
+    private void volverAlMenuPrincipal() {
+        controller.detenerMusica();
+        Window ventanaActual = SwingUtilities.getWindowAncestor(this);
+
+        if (ventanaActual != null) {
+            ventanaActual.dispose();
+        }
+
+        MenuPrincipalView menu = new MenuPrincipalView(controller);
+        menu.setVisible(true);
     }
 
     private interface MovimientoVista {
