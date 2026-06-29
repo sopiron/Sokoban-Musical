@@ -1,6 +1,7 @@
 package controller;
 
 import modelo.Caja;
+import modelo.Cerrojo;
 import modelo.Destino;
 import modelo.GestorNiveles;
 import modelo.GestorSonido;
@@ -127,7 +128,8 @@ public class JuegoController{
         for (Pared pared : tablero.getParedes()) {
             vistas.add(new ObjetoView(
                     pared.getPosicion().getFila(),
-                    pared.getPosicion().getColumna()
+                    pared.getPosicion().getColumna(),
+                    pared.getRutaImagen()
             ));
         }
 
@@ -176,6 +178,20 @@ public class JuegoController{
             vistas.add(new ObjetoView(
                     piso.getPosicion().getFila(),
                     piso.getPosicion().getColumna()
+            ));
+        }
+
+        return vistas;
+    }
+
+    public List<ObjetoView> getCerrojosView() {
+        List<ObjetoView> vistas = new ArrayList<>();
+
+        for (Cerrojo cerrojo : tablero.getCerrojos()) {
+            vistas.add(new ObjetoView(
+                    cerrojo.getPosicion().getFila(),
+                    cerrojo.getPosicion().getColumna(),
+                    "/images/cerrojo.png"
             ));
         }
 

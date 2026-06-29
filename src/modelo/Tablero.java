@@ -3,6 +3,7 @@ package modelo;
 import java.util.ArrayList;
 import java.util.List;
 
+import modelo.estadoCajaGuardaddo.EstadoCajaGuardado;
 import modelo.movimientoCaja.MovimientoCaja;
 import modelo.movimientoCaja.MovimientoNormal;
 import modelo.movimientoCaja.MovimientoResbaladizo;
@@ -15,6 +16,8 @@ public class Tablero {
     private ArrayList<Pared> paredes;
     private ArrayList<Destino> destinos;
     private ArrayList<PisoResbaladizo> pisosResbaladizos;
+    private ArrayList<Cerrojo> cerrojos;
+    private ArrayList<MuroCerrado> murosCerrados;
     private HistorialMovimientos historial;
 
     private MovimientoCaja movimientoNormal;
@@ -30,6 +33,8 @@ public class Tablero {
         paredes = new ArrayList<>();
         destinos = new ArrayList<>();
         pisosResbaladizos = new ArrayList<>();
+        cerrojos = new ArrayList<>();
+        murosCerrados = new ArrayList<>();
 
         estadisticasNivel = new EstadisticasNivel();
         historial = new HistorialMovimientos();
@@ -49,12 +54,12 @@ public class Tablero {
     // Unificamos la búsqueda. Si encuentra algo (Caja o Pared), lo devuelve. Si está vacío, devuelve null.
     public ElementoInteractuable obtenerElemento(int fila, int columna) {
         for (Caja caja : cajas) {
-            if (caja.getPosicion().getFila() == fila && caja.getPosicion().getColumna() == columna) {
+            if (caja.getPosicion().getFila() == fila && caja.getPosicion().getColumna() == columna && caja.bloquea()) {
                 return caja;
             }
         }
         for (Pared pared : paredes) {
-            if (pared.getPosicion().getFila() == fila && pared.getPosicion().getColumna() == columna) {
+            if (pared.getPosicion().getFila() == fila && pared.getPosicion().getColumna() == columna && pared.bloquea()) {
                 return pared;
             }
         }
@@ -95,24 +100,27 @@ public class Tablero {
     // Este método revisa si todas las cajas están paradas exactamente sobre un destino
     public boolean verificarVictoria() {
 
-        if (cajas.isEmpty() || destinos.isEmpty()) {
+        if (destinos.isEmpty()) {
             return false;
         }
 
-        int cajasEnDestino = 0;
+        for (Destino destino : destinos) {
+            boolean destinoOcupado = false;
 
-        for (Caja caja : cajas) {
-            for (Destino destino : destinos) {
-                if (caja.getPosicion().getFila() == destino.getPosicion().getFila() &&
-                        caja.getPosicion().getColumna() == destino.getPosicion().getColumna()) {
-                    cajasEnDestino++;
+            for (Caja caja : cajas) {
+                if (caja.cuentaParaDestino() && caja.getPosicion().getFila() == destino.getPosicion().getFila() &&
+                    caja.getPosicion().getColumna() == destino.getPosicion().getColumna()) {
+                    destinoOcupado = true;
                     break;
                 }
             }
+
+            if (!destinoOcupado) {
+                return false;
+            }
         }
 
-        // Si la cantidad de cajas en destino coincide con el total de cajas, devuelve true (ganaste)
-        return cajasEnDestino == cajas.size();
+        return true;
     }
 
     public boolean esDestino(int fila, int columna) {
@@ -175,9 +183,13 @@ public class Tablero {
     }
 
     private void detenerDeslizamiento() {
+        if (cajaDeslizandose != null) {
+            cajaDeslizandose.alTerminarMovimiento(this);
+        }
         cajaDeslizandose = null;
     }
 
+    //Ver el tipo de movimiento de la caja
     public MovimientoCaja obtenerMovimientoCaja(int fila, int columna) {
         for (PisoResbaladizo piso : pisosResbaladizos) {
             if (piso.ocupa(fila, columna)) {
@@ -188,29 +200,47 @@ public class Tablero {
         return movimientoNormal;
     }
 
+    public void romperCaja(Caja caja) {
+        if (caja == cajaDeslizandose) {
+            detenerDeslizamiento();
+        }
+
+        cajas.remove(caja);
+
+        GestorSonido.getInstance().reproducirEfecto(
+                "/sounds/romperInstrumento.wav"
+        );
+    }
+
     // ── Memento ────────────────────────────────────────────────────────────────
 
     public TableroMemento guardarMemento() {
-        List<Posicion> posCajas = new ArrayList<>();
-        for (Caja caja : cajas) {
-            posCajas.add(new Posicion(
-                    caja.getPosicion().getFila(),
-                    caja.getPosicion().getColumna()
-            ));
-        }
-        Posicion posJugador = new Posicion(
-                jugador.getPosicion().getFila(),
-                jugador.getPosicion().getColumna()
-        );
-        return new TableroMemento(posCajas, posJugador);
-    }
+    return new TableroMemento(cajas, jugador.getPosicion(), cerrojos, murosCerrados);
+}
 
     public void restaurarMemento(TableroMemento memento) {
-        List<Posicion> posCajas = memento.getPosicionesCajas();
-        for (int i = 0; i < cajas.size() && i < posCajas.size(); i++) {
-            cajas.get(i).setPosicion(posCajas.get(i));
-        }
         jugador.setPosicion(memento.getPosicionJugador());
+
+        cajas.clear();
+
+        for (EstadoCajaGuardado estadoCaja : memento.getEstadosCajas()) {
+            estadoCaja.restaurar();
+            cajas.add(estadoCaja.getCaja());
+        }
+
+        List<Boolean> estadosCerrojos = memento.getEstadosCerrojos();
+
+        for (int i = 0; i < cerrojos.size() && i < estadosCerrojos.size(); i++) {
+            cerrojos.get(i).restaurarActivado(estadosCerrojos.get(i));
+        }
+
+        List<Boolean> estadosMuros = memento.getEstadosMuros();
+
+        for (int i = 0; i < murosCerrados.size() && i < estadosMuros.size(); i++) {
+            murosCerrados.get(i).restaurarAbierto(estadosMuros.get(i));
+        }
+
+        cajaDeslizandose = null;
     }
 
     public boolean deshacerMovimiento() {
@@ -227,6 +257,32 @@ public class Tablero {
 
     public HistorialMovimientos getHistorial() {
         return historial;
+    }
+
+    // ── Cerrojo y muros ──────────────────────────────────────────────────────
+    public void activarCerrojoEn(Posicion posicion) {
+        for (Cerrojo cerrojo : cerrojos) {
+            if (cerrojo.ocupa(posicion.getFila(), posicion.getColumna())) {
+                cerrojo.activar();
+            }
+        }
+    }
+
+    public void agregarMuroCerrado(MuroCerrado muro) {
+        paredes.add(muro);
+        murosCerrados.add(muro);
+    }
+
+    public ArrayList<Cerrojo> getCerrojos() {
+        return cerrojos;
+    }
+
+    public void conectarCerrojosConMuros() {
+        for (Cerrojo cerrojo : cerrojos) {
+            for (MuroCerrado muro : murosCerrados) {
+                cerrojo.agregarObservador(muro);
+            }
+        }
     }
 
     // ── Getters y Setters ──────────────────────────────────────────────────────
@@ -246,4 +302,8 @@ public class Tablero {
     public ArrayList<PisoResbaladizo> getPisosResbaladizos() { return pisosResbaladizos; }
 
     public EstadisticasNivel getEstadisticasNivel() { return estadisticasNivel; }
+
+    public ArrayList<MuroCerrado> getMurosCerrados() {
+        return murosCerrados;
+    }
 }

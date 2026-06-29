@@ -35,6 +35,22 @@ public class NivelJazzFactory implements NivelFactory{
         creadores.put('~', (posicion, tablero) ->
             tablero.getPisosResbaladizos().add(crearPisoResbaladizo(posicion))
         );
+
+        creadores.put('F', (posicion, tablero) ->
+            tablero.getCajas().add(crearCajaFragil(posicion))
+        );
+
+        creadores.put('K', (posicion, tablero) ->
+                tablero.getCajas().add(crearCajaLlave(posicion))
+        );
+
+        creadores.put('C', (posicion, tablero) ->
+                tablero.getCerrojos().add(crearCerrojo(posicion))
+        );
+
+        creadores.put('M', (posicion, tablero) ->
+                tablero.agregarMuroCerrado(crearMuroCerrado(posicion))
+        );
     }
 
      @Override
@@ -60,6 +76,26 @@ public class NivelJazzFactory implements NivelFactory{
     @Override
     public PisoResbaladizo crearPisoResbaladizo(Posicion posicion) {
         return new PisoResbaladizo(posicion);
+    }
+
+    @Override
+    public Caja crearCajaFragil(Posicion posicion) {
+        return new CajaFragil(posicion);
+    }
+
+    @Override
+    public Caja crearCajaLlave(Posicion posicion){
+        return new CajaLlave(posicion);
+    }
+
+    @Override
+    public Cerrojo crearCerrojo(Posicion posicion){
+        return new Cerrojo(posicion);
+    }
+
+    @Override
+    public MuroCerrado crearMuroCerrado(Posicion posicion){
+        return new MuroCerrado(posicion);
     }
 
     @Override

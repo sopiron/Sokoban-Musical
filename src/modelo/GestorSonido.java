@@ -10,6 +10,7 @@ import javax.sound.sampled.FloatControl;
 public class GestorSonido {
 
     private static GestorSonido gestorSonido;
+
     private Clip musicaActual;
     private String rutaActual;
     private boolean muteado = false;
@@ -66,7 +67,30 @@ public class GestorSonido {
             FloatControl volumen = (FloatControl) musicaActual.getControl(FloatControl.Type.MASTER_GAIN);
             volumen.setValue(muteado ? volumen.getMinimum() : 0.0f);
         } catch (Exception e) {
-            // Si el control no está disponible, ignoramos
+            // Si el control de volumen no está disponible, lo ignoramos.
+        }
+    }
+
+    public void reproducirEfecto(String ruta) {
+        if (muteado) {
+            return;
+        }
+
+        try {
+            URL url = getClass().getResource(ruta);
+
+            if (url == null) {
+                throw new IllegalArgumentException("No se encontró el sonido: " + ruta);
+            }
+
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
+
+            Clip efecto = AudioSystem.getClip();
+            efecto.open(audioInputStream);
+            efecto.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

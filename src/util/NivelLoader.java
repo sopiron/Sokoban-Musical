@@ -49,6 +49,8 @@ public class NivelLoader {
             e.printStackTrace();
         }
 
+        tablero.conectarCerrojosConMuros();
+
         return tablero;
     }
 
