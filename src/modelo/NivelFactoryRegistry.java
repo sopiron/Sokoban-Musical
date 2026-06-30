@@ -13,6 +13,10 @@ public class NivelFactoryRegistry {
 
         factories.put("ROCK", new NivelRockFactory());
         factories.put("JAZZ", new NivelJazzFactory());
+        factories.put("TANGO", new NivelTangoFactory());
+        factories.put("MARIACHI", new NivelMariachiFactory());
+        factories.put("REGGUE", new NivelReggueFactory());
+        factories.put("METALICA", new NivelMetalicaFactory());
     }
 
     public NivelFactory obtenerFactory(String genero) {
