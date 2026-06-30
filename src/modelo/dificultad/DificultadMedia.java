@@ -9,11 +9,11 @@ public class DificultadMedia implements DificultadPorNivel{
 
     @Override
     public String calcularNotas(int segundos) {
-        if (segundos <= 45) {
+        if (segundos <= 90) {
             return "♫♫♫";
         }
 
-        if (segundos <= 75) {
+        if (segundos <= 150) {
             return "♫♫";
         }
 

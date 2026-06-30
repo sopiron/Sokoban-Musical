@@ -28,6 +28,10 @@ public class Cerrojo {
             return;
         }
 
+        GestorSonido.getInstance().reproducirEfecto(
+            "/sounds/abrirCerrojo.wav"
+        );
+
         activado = true;
         notificarObservadores();
     }

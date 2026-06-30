@@ -4,9 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import modelo.dificultad.DificultadBaja;
+import modelo.dificultad.DificultadMedia;
 import modelo.dificultad.DificultadPorNivel;
 import modelo.puntaje.CriterioPuntaje;
+import modelo.puntaje.CriterioPuntajeMedio;
 import modelo.puntaje.CriterioPuntajeSimple;
 
 public class NivelMariachiFactory implements NivelFactory{
@@ -107,17 +108,17 @@ public class NivelMariachiFactory implements NivelFactory{
 
     @Override
     public String getRutaMusicaFondo() {
-        return "/sounds/maraca.wav";
+        return "/sounds/mariachi.wav";
     }
 
     @Override
     public DificultadPorNivel crearDificultadPorNivel() {
-        return new DificultadBaja();
+        return new DificultadMedia();
     }
 
     @Override
     public CriterioPuntaje crearCriterioPuntaje(){
-        return new CriterioPuntajeSimple();
+        return new CriterioPuntajeMedio();
     }
 
 }

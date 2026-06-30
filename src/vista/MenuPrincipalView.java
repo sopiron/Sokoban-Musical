@@ -8,10 +8,9 @@ import java.net.URL;
 
 public class MenuPrincipalView extends JFrame {
 
-    private JButton btnJugar;
-    private JButton btnNiveles;
-    private JButton btnMusica;
-    private boolean musicaActiva = true;
+    private BotonRedondeado btnJugar;
+    private BotonRedondeado btnNiveles;
+    private BotonRedondeado btnMusica;
 
     public MenuPrincipalView(JuegoController controller) {
         setTitle("Sokoban Musical");
@@ -37,7 +36,7 @@ public class MenuPrincipalView extends JFrame {
         );
 
         btnMusica = new BotonRedondeado(
-                "🔊  Música: ON",
+                "",
                 new Color(91, 53, 29),
                 new Color(166, 103, 45)
         );
@@ -48,6 +47,8 @@ public class MenuPrincipalView extends JFrame {
         setContentPane(fondo);
 
         configurarEventos(controller);
+
+        actualizarTextoBotonMusica(controller);
     }
 
     public JButton getBtnJugar() {
@@ -258,11 +259,18 @@ public class MenuPrincipalView extends JFrame {
         });
 
         btnMusica.addActionListener(e -> {
-            musicaActiva = !musicaActiva;
-            controller.setMutearMusica(!musicaActiva);
-            btnMusica.setText(musicaActiva ? "🔊  Música: ON" : "🔇  Música: OFF");
+                controller.toggleMusica();
+                actualizarTextoBotonMusica(controller);
         });
     }
+
+    private void actualizarTextoBotonMusica(JuegoController controller) {
+        if (controller.estaMusicaMuteada()) {
+                btnMusica.setText("♪ Música: OFF");
+        } else {
+                btnMusica.setText("♪ Música: ON");
+        }
+        }
 
 
     private void mostrarSelectorNiveles(JuegoController controller) {

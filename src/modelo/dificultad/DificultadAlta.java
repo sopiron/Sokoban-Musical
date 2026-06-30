@@ -9,11 +9,11 @@ public class DificultadAlta implements DificultadPorNivel{
 
     @Override
     public String calcularNotas(int segundos) {
-        if (segundos <= 30) {
+        if (segundos <= 150) {
             return "♫♫♫";
         }
 
-        if (segundos <= 60) {
+        if (segundos <= 240) {
             return "♫♫";
         }
 

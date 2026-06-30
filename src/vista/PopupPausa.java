@@ -35,15 +35,29 @@ public class PopupPausa extends JDialog {
         panel.setLayout(null);
 
         // ── Botón cerrar (X) arriba a la derecha ──
-        JButton btnCerrar = new JButton("X");
-        btnCerrar.setFont(new Font("SansSerif", Font.BOLD, 16));
+        JLabel btnCerrar = new JLabel("✕", SwingConstants.CENTER);
+        btnCerrar.setFont(new Font("SansSerif", Font.BOLD, 22));
         btnCerrar.setForeground(new Color(224, 171, 74));
-        btnCerrar.setContentAreaFilled(false);
-        btnCerrar.setBorderPainted(false);
-        btnCerrar.setFocusPainted(false);
         btnCerrar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnCerrar.setBounds(370, 15, 35, 35);
-        btnCerrar.addActionListener(e -> cerrar(controller));
+        btnCerrar.setBounds(365, 15, 40, 40);
+
+        btnCerrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                cerrar(controller);
+            }
+
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                btnCerrar.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                btnCerrar.setForeground(new Color(224, 171, 74));
+            }
+        });
+
         panel.add(btnCerrar);
 
         // ── Título ──

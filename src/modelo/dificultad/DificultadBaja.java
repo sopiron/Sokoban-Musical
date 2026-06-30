@@ -13,7 +13,7 @@ public class DificultadBaja implements DificultadPorNivel{
             return "♫♫♫";
         }
 
-        if (segundos <= 90) {
+        if (segundos <= 100) {
             return "♫♫";
         }
 

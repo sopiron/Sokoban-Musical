@@ -1,4 +1,4 @@
-GENERO=ROCK
+GENERO=TANGO
     #####
     #...#
     #...#

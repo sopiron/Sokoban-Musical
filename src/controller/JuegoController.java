@@ -272,4 +272,19 @@ public class JuegoController{
     public void setMutearMusica(boolean mutear) {
         GestorSonido.getInstance().setMutear(mutear);
     }
+
+    public boolean estaMusicaMuteada() {
+        return GestorSonido.getInstance().estaMuteado();
+    }
+
+    public void toggleMusica() {
+        boolean nuevoEstadoMuteado = !GestorSonido.getInstance().estaMuteado();
+        GestorSonido.getInstance().setMutear(nuevoEstadoMuteado);
+    }
+
+    public void reproducirSonidoNivelCompletado() {
+        GestorSonido.getInstance().reproducirEfecto(
+                "/sounds/nivelCompletado.wav"
+        );
+    }
 }

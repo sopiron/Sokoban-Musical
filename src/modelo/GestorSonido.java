@@ -61,6 +61,10 @@ public class GestorSonido {
         aplicarMuteo();
     }
 
+    public boolean estaMuteado() {
+        return muteado;
+    }
+
     private void aplicarMuteo() {
         if (musicaActual == null) return;
         try {

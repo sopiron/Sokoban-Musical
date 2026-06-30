@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import modelo.dificultad.DificultadAlta;
 import modelo.dificultad.DificultadBaja;
 import modelo.dificultad.DificultadPorNivel;
 import modelo.puntaje.CriterioPuntaje;
+import modelo.puntaje.CriterioPuntajeDificil;
 import modelo.puntaje.CriterioPuntajeSimple;
 
 public class NivelMetalicaFactory implements NivelFactory{
@@ -55,7 +57,7 @@ public class NivelMetalicaFactory implements NivelFactory{
 
     @Override
     public Caja crearCaja(Posicion posicion) {
-        return new Caja(posicion, "/images/cajaTambor.png"); // después puede ser CajaSaxo
+        return new Caja(posicion, "/images/cajaBateria.png"); 
     }
 
     @Override
@@ -107,17 +109,17 @@ public class NivelMetalicaFactory implements NivelFactory{
 
     @Override
     public String getRutaMusicaFondo() {
-        return "/sounds/reggue.wav";
+        return "/sounds/metalica.wav";
     }
 
     @Override
     public DificultadPorNivel crearDificultadPorNivel() {
-        return new DificultadBaja();
+        return new DificultadAlta();
     }
 
     @Override
     public CriterioPuntaje crearCriterioPuntaje(){
-        return new CriterioPuntajeSimple();
+        return new CriterioPuntajeDificil();
     }
 
 }

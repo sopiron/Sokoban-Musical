@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import modelo.dificultad.DificultadBaja;
+import modelo.dificultad.DificultadAlta;
+import modelo.dificultad.DificultadMedia;
 import modelo.dificultad.DificultadPorNivel;
 import modelo.puntaje.CriterioPuntaje;
+import modelo.puntaje.CriterioPuntajeMedio;
 import modelo.puntaje.CriterioPuntajeSimple;
 
 public class NivelTangoFactory implements NivelFactory{
@@ -55,7 +57,7 @@ public class NivelTangoFactory implements NivelFactory{
 
     @Override
     public Caja crearCaja(Posicion posicion) {
-        return new Caja(posicion, "/images/cajaViolin.png"); // después puede ser CajaSaxo
+        return new Caja(posicion, "/images/cajaViolin.png"); 
     }
 
     @Override
@@ -112,12 +114,12 @@ public class NivelTangoFactory implements NivelFactory{
 
     @Override
     public DificultadPorNivel crearDificultadPorNivel() {
-        return new DificultadBaja();
+        return new DificultadMedia();
     }
 
     @Override
     public CriterioPuntaje crearCriterioPuntaje(){
-        return new CriterioPuntajeSimple();
+        return new CriterioPuntajeMedio();
     }
 
 }

@@ -9,7 +9,7 @@ public class CriterioPuntajeSimple implements CriterioPuntaje{
             EstadisticasNivel estadisticas,
             int segundos
     ) {
-        int puntajeBase = 1000;
+       int puntajeBase = 1000;
 
         int penalizacionMovimientos = estadisticas.getMovimientos() * 5;
         int penalizacionEmpujes = estadisticas.getEmpujes() * 10;
@@ -26,9 +26,4 @@ public class CriterioPuntajeSimple implements CriterioPuntaje{
     }
 }
 
-// Puntaje base: 1000 puntos
-// -5 por cada movimiento
-// -10 por cada empuje
-// -50 por cada uso de undo
-// -2 por cada segundo transcurrido
-// El puntaje mínimo es 0
+
