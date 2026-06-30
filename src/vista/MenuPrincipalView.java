@@ -11,6 +11,7 @@ public class MenuPrincipalView extends JFrame {
     private BotonRedondeado btnJugar;
     private BotonRedondeado btnNiveles;
     private BotonRedondeado btnMusica;
+    private BotonRedondeado btnEfectos;
 
     public MenuPrincipalView(JuegoController controller) {
         setTitle("Sokoban Musical");
@@ -40,9 +41,16 @@ public class MenuPrincipalView extends JFrame {
                 new Color(91, 53, 29),
                 new Color(166, 103, 45)
         );
-        btnMusica.setFont(new Font("SansSerif", Font.BOLD, 16));
 
-        fondo.configurarBotones(btnJugar, btnNiveles, btnMusica);
+        btnEfectos = new BotonRedondeado(
+                "",
+                new Color(91, 53, 29),
+                new Color(166, 103, 45)
+        );
+        btnMusica.setFont(new Font("SansSerif", Font.BOLD, 14));
+        btnEfectos.setFont(new Font("SansSerif", Font.BOLD, 14));
+
+        fondo.configurarBotones(btnJugar, btnNiveles, btnMusica, btnEfectos);
 
         setContentPane(fondo);
 
@@ -70,6 +78,7 @@ public class MenuPrincipalView extends JFrame {
         private JButton btnJugar;
         private JButton btnNiveles;
         private JButton btnMusica;
+        private JButton btnEfectos;
 
         public FondoMenuPanel(String rutaFondo) {
             setLayout(null);
@@ -118,15 +127,18 @@ public class MenuPrincipalView extends JFrame {
         public void configurarBotones(
                 JButton btnJugar,
                 JButton btnNiveles,
-                JButton btnMusica
+                JButton btnMusica,
+                JButton btnEfectos
         ) {
             this.btnJugar = btnJugar;
             this.btnNiveles = btnNiveles;
             this.btnMusica = btnMusica;
+            this.btnEfectos = btnEfectos;
 
             add(btnJugar);
             add(btnNiveles);
             add(btnMusica);
+            add(btnEfectos);
         }
 
         @Override
@@ -214,6 +226,14 @@ public class MenuPrincipalView extends JFrame {
                     50
             );
 
+            btnEfectos.setBounds(
+                    ancho - 210,
+                    80,
+                    190,
+                    50
+            );
+            
+
             int anchoPersonaje = 320;
             int altoPersonaje = 390;
 
@@ -262,6 +282,11 @@ public class MenuPrincipalView extends JFrame {
                 controller.toggleMusica();
                 actualizarTextoBotonMusica(controller);
         });
+
+        btnEfectos.addActionListener(e -> {
+                controller.toggleEfectos();
+                actualizarTextoBotonMusica(controller);
+        });
     }
 
     private void actualizarTextoBotonMusica(JuegoController controller) {
@@ -269,6 +294,12 @@ public class MenuPrincipalView extends JFrame {
                 btnMusica.setText("♪ Música: OFF");
         } else {
                 btnMusica.setText("♪ Música: ON");
+        }
+
+        if (controller.estanEfectosMuteados()) {
+                btnEfectos.setText("FX OFF");
+        } else {
+                btnEfectos.setText("FX ON");
         }
         }
 

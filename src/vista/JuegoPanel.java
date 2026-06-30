@@ -30,6 +30,7 @@ public class JuegoPanel extends JPanel {
     private BarraUndo barraUndo;
     private BotonRedondeado btnPausa;
     private BotonRedondeado btnMusica;
+    private BotonRedondeado btnEfectos;
 
     private Image imagenFondo;
     private Image imagenPiso;
@@ -89,6 +90,18 @@ public class JuegoPanel extends JPanel {
         btnMusica.setMargin(new Insets(0, 0, 0, 0));
         btnMusica.addActionListener(e -> toggleMusica());
         add(btnMusica);
+
+        btnEfectos = new BotonRedondeado(
+                "",
+                new Color(91, 53, 29),
+                new Color(166, 103, 45)
+        );
+
+        btnEfectos.setFont(new Font("SansSerif", Font.BOLD, 14));
+        btnEfectos.setFocusable(false);
+        btnEfectos.setMargin(new Insets(0, 0, 0, 0));
+        btnEfectos.addActionListener(e -> toggleEfectos());
+        add(btnEfectos);
 
         actualizarTextoBotonMusica();
 
@@ -165,11 +178,22 @@ public class JuegoPanel extends JPanel {
         actualizarTextoBotonMusica();
     }
 
+    private void toggleEfectos() {
+        controller.toggleEfectos();
+        actualizarTextoBotonMusica();
+    }
+
     private void actualizarTextoBotonMusica() {
         if (controller.estaMusicaMuteada()) {
             btnMusica.setText("♪ OFF");
         } else {
             btnMusica.setText("♪ ON");
+        }
+
+        if (controller.estanEfectosMuteados()) {
+            btnEfectos.setText("FX OFF");
+        } else {
+            btnEfectos.setText("FX ON");
         }
     }
 
@@ -304,21 +328,58 @@ public class JuegoPanel extends JPanel {
     public void doLayout() {
         super.doLayout();
 
-        int anchoBarra = 1000;
-        int altoBarra = 70;
+        int anchoPanel = getWidth();
 
-        int x = (getWidth() - anchoBarra) / 2;
+        int ySuperior = 35;
+        int altoSuperior = 70;
 
-        barraPuntos.setBounds(x, 35, anchoBarra, altoBarra);
+        int margenDerecho = 60;
+        int espacio = 18;
 
-        // Botón pausa: arriba a la derecha
-        btnPausa.setBounds(getWidth() - 90, 35, 70, 70);
+        int anchoPausa = 70;
+        int anchoSonido = 120;
 
-        // Botón música: al lado del pausa
-        btnMusica.setBounds(getWidth() - 210, 35, 105, 70);
+        int xPausa = anchoPanel - margenDerecho - anchoPausa;
+        int xEfectos = xPausa - espacio - anchoSonido;
+        int xMusica = xEfectos - espacio - anchoSonido;
 
-        // Barra Undo: centrada abajo, mismo ancho que la barra de puntos
-        barraUndo.setBounds(x, getHeight() - 100, anchoBarra, altoBarra);
+        btnMusica.setBounds(
+                xMusica,
+                ySuperior,
+                anchoSonido,
+                altoSuperior
+        );
+
+        btnEfectos.setBounds(
+                xEfectos,
+                ySuperior,
+                anchoSonido,
+                altoSuperior
+        );
+
+        btnPausa.setBounds(
+                xPausa,
+                ySuperior,
+                anchoPausa,
+                altoSuperior
+        );
+
+        int xBarra = 120;
+        int anchoBarra = xMusica - xBarra - espacio;
+
+        barraPuntos.setBounds(
+                xBarra,
+                ySuperior,
+                anchoBarra,
+                altoSuperior
+        );
+
+        barraUndo.setBounds(
+                220,
+                getHeight() - 110,
+                getWidth() - 440,
+                70
+        );
     }
 
     @Override

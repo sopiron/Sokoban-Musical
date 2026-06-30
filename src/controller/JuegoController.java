@@ -270,16 +270,29 @@ public class JuegoController{
     }
 
     public void setMutearMusica(boolean mutear) {
-        GestorSonido.getInstance().setMutear(mutear);
+        GestorSonido.getInstance().setMutearMusica(mutear);
+    }
+
+    public void setMutearEfectos(boolean mutear) {
+        GestorSonido.getInstance().setMutearEfecto(mutear);
     }
 
     public boolean estaMusicaMuteada() {
-        return GestorSonido.getInstance().estaMuteado();
+        return GestorSonido.getInstance().estaMusicaMuteada();
+    }
+
+    public boolean estanEfectosMuteados() {
+        return GestorSonido.getInstance().estaEfectoMuteado();
     }
 
     public void toggleMusica() {
-        boolean nuevoEstadoMuteado = !GestorSonido.getInstance().estaMuteado();
-        GestorSonido.getInstance().setMutear(nuevoEstadoMuteado);
+        boolean nuevoEstadoMuteado = !GestorSonido.getInstance().estaMusicaMuteada();
+        GestorSonido.getInstance().setMutearMusica(nuevoEstadoMuteado);
+    }
+
+    public void toggleEfectos() {
+        boolean nuevoEstado = !GestorSonido.getInstance().estaEfectoMuteado();
+        GestorSonido.getInstance().setMutearEfecto(nuevoEstado);
     }
 
     public void reproducirSonidoNivelCompletado() {
