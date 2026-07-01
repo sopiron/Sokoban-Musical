@@ -3,8 +3,6 @@ package modelo;
 
 import modelo.observer.ObserverCerrojo;
 
-//MuroCerrado se comporta como pared
-//pero puede abrirse cuando un cerrojo lo notifica.
 public class MuroCerrado extends Pared implements ObserverCerrojo {
 
     private boolean abierto;

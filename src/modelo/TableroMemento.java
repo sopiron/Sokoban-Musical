@@ -5,17 +5,10 @@ import java.util.List;
 
 import modelo.estadoCajaGuardaddo.EstadoCajaGuardado;
 
-/**
- * Memento: guarda una foto inmutable del estado del tablero en un momento dado.
- * Solo el Tablero puede crear y leer un TableroMemento (acceso por paquete).
- * El HistorialMovimientos los almacena sin ver su contenido.
- */
 public class TableroMemento {
 
-    // Estado de cada caja (en el mismo orden que la lista original)
     private final List<EstadoCajaGuardado> estadosCajas;
 
-    // Posición del jugador
     private final Posicion posicionJugador;
 
     private final List<Boolean> estadosCerrojos;
@@ -25,7 +18,6 @@ public class TableroMemento {
 
         this.estadosCajas = new ArrayList<>();
 
-        // Copiamos defensivamente para que nadie pueda mutar el snapshot
         for (Caja caja : cajas) {
             this.estadosCajas.add(caja.guardarEstado());
         }

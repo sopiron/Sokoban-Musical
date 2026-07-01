@@ -204,6 +204,7 @@ public class JuegoController{
         medidorNivel.agregarObservador(observador);
     }
 
+
     //Animacion de las cajas
     public boolean hayCajaDeslizandose() {
         return tablero.hayCajaDeslizandose();
@@ -226,7 +227,6 @@ public class JuegoController{
 
     /**
      * Ejecuta el undo: retrocede hasta 5 movimientos.
-     * Devuelve true si se pudo deshacer.
      */
     public boolean accionUndo() {
         return tablero.deshacerMovimiento();

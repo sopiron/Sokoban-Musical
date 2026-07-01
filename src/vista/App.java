@@ -2,7 +2,7 @@ package vista;
 
 import javax.swing.*;
 
-import controller.JuegoController; // MELANIE AGRUEGUE EL IMPORT DEL CONTROLLER
+import controller.JuegoController; 
 
 public class App {
     public static void main(String[] args) {

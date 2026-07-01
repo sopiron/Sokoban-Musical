@@ -27,7 +27,6 @@ public class MovimientoResbaladizo implements MovimientoCaja {
 
         tablero.registrarEmpuje();
 
-        // Acá le avisamos al tablero que desde ahora debe seguir deslizándose
         tablero.iniciarDeslizamiento(caja, difFila, difColumna);
 
         return true;

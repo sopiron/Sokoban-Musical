@@ -60,7 +60,6 @@ public class CajaFragil extends Caja {
         this.estado = estado;
     }
 
-    //Este método es el que permite que una caja frágil guarde su estado, su posición, mi resistencia y mi estado visual.
     @Override
     public EstadoCajaGuardado guardarEstado() {
         return new EstadoCajaFragilGuardado(this);

@@ -6,7 +6,7 @@ public class CriterioPuntajeMedio implements CriterioPuntaje {
 
     @Override
     public int calcularPuntaje(EstadisticasNivel estadisticas, int segundos) {
-        int puntajeBase = 2000;
+        int puntajeBase = 3500;
 
         int penalizacionMovimientos = estadisticas.getMovimientos() * 4;
         int penalizacionEmpujes = estadisticas.getEmpujes() * 8;

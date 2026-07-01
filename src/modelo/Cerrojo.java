@@ -17,12 +17,10 @@ public class Cerrojo {
         this.observadores = new ArrayList<>();
     }
 
-    //Sirve para conectar un muro con un cerrojo
     public void agregarObservador(ObserverCerrojo observador) {
         observadores.add(observador);
     }
 
-    //Marca cerrojo como activado
     public void activar() {
         if (activado) {
             return;

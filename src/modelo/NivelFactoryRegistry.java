@@ -3,7 +3,7 @@ package modelo;
 import java.util.HashMap;
 import java.util.Map;
 
-//Es para tener un registro de fábricas. Esto sirve para no poner if ni switch en el controller.
+//Es para tener un registro de fábricas. 
 public class NivelFactoryRegistry {
 
     private Map<String, NivelFactory> factories;

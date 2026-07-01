@@ -4,12 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import modelo.dificultad.DificultadAlta;
 import modelo.dificultad.DificultadMedia;
 import modelo.dificultad.DificultadPorNivel;
 import modelo.puntaje.CriterioPuntaje;
 import modelo.puntaje.CriterioPuntajeMedio;
-import modelo.puntaje.CriterioPuntajeSimple;
 
 public class NivelTangoFactory implements NivelFactory{
 

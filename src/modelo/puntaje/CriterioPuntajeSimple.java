@@ -9,7 +9,7 @@ public class CriterioPuntajeSimple implements CriterioPuntaje{
             EstadisticasNivel estadisticas,
             int segundos
     ) {
-       int puntajeBase = 1000;
+       int puntajeBase = 2500;
 
         int penalizacionMovimientos = estadisticas.getMovimientos() * 5;
         int penalizacionEmpujes = estadisticas.getEmpujes() * 10;

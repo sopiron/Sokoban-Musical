@@ -12,6 +12,7 @@ public class MenuPrincipalView extends JFrame {
     private BotonRedondeado btnNiveles;
     private BotonRedondeado btnMusica;
     private BotonRedondeado btnEfectos;
+    private BotonRedondeado btnInstrucciones;
 
     public MenuPrincipalView(JuegoController controller) {
         setTitle("Sokoban Musical");
@@ -36,6 +37,12 @@ public class MenuPrincipalView extends JFrame {
                 new Color(138, 72, 42)
         );
 
+        btnInstrucciones = new BotonRedondeado(
+                "CÓMO JUGAR ?",
+                new Color(91, 53, 29),
+                new Color(166, 103, 45)
+        );
+
         btnMusica = new BotonRedondeado(
                 "",
                 new Color(91, 53, 29),
@@ -49,8 +56,9 @@ public class MenuPrincipalView extends JFrame {
         );
         btnMusica.setFont(new Font("SansSerif", Font.BOLD, 14));
         btnEfectos.setFont(new Font("SansSerif", Font.BOLD, 14));
+        btnInstrucciones.setFont(new Font("SansSerif", Font.BOLD, 18));
 
-        fondo.configurarBotones(btnJugar, btnNiveles, btnMusica, btnEfectos);
+        fondo.configurarBotones(btnJugar, btnNiveles, btnMusica, btnEfectos, btnInstrucciones);
 
         setContentPane(fondo);
 
@@ -79,6 +87,7 @@ public class MenuPrincipalView extends JFrame {
         private JButton btnNiveles;
         private JButton btnMusica;
         private JButton btnEfectos;
+        private JButton btnInstrucciones;
 
         public FondoMenuPanel(String rutaFondo) {
             setLayout(null);
@@ -128,17 +137,20 @@ public class MenuPrincipalView extends JFrame {
                 JButton btnJugar,
                 JButton btnNiveles,
                 JButton btnMusica,
-                JButton btnEfectos
+                JButton btnEfectos,
+                JButton btnInstrucciones
         ) {
             this.btnJugar = btnJugar;
             this.btnNiveles = btnNiveles;
             this.btnMusica = btnMusica;
             this.btnEfectos = btnEfectos;
+            this.btnInstrucciones = btnInstrucciones;
 
             add(btnJugar);
             add(btnNiveles);
             add(btnMusica);
             add(btnEfectos);
+            add(btnInstrucciones);
         }
 
         @Override
@@ -218,6 +230,13 @@ public class MenuPrincipalView extends JFrame {
                     altoBoton
             );
 
+            btnInstrucciones.setBounds(
+                        xBoton,
+                        (int) (alto * 0.71),
+                        anchoBoton,
+                        altoBoton
+                );
+
             // Botón música: arriba a la derecha
             btnMusica.setBounds(
                     ancho - 210,
@@ -276,6 +295,11 @@ public class MenuPrincipalView extends JFrame {
 
         btnNiveles.addActionListener(e -> {
             mostrarSelectorNiveles(controller);
+        });
+
+        btnInstrucciones.addActionListener(e -> {
+                PopupInstrucciones popup = new PopupInstrucciones(this);
+                popup.setVisible(true);
         });
 
         btnMusica.addActionListener(e -> {

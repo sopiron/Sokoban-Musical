@@ -5,13 +5,9 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import modelo.dificultad.DificultadAlta;
-import modelo.dificultad.DificultadBaja;
-import modelo.dificultad.DificultadMedia;
 import modelo.dificultad.DificultadPorNivel;
 import modelo.puntaje.CriterioPuntaje;
 import modelo.puntaje.CriterioPuntajeDificil;
-import modelo.puntaje.CriterioPuntajeMedio;
-import modelo.puntaje.CriterioPuntajeSimple;
 
 public class NivelSambaFactory implements NivelFactory{
 

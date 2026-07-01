@@ -8,7 +8,6 @@ import modelo.dificultad.DificultadMedia;
 import modelo.dificultad.DificultadPorNivel;
 import modelo.puntaje.CriterioPuntaje;
 import modelo.puntaje.CriterioPuntajeMedio;
-import modelo.puntaje.CriterioPuntajeSimple;
 
 public class NivelMariachiFactory implements NivelFactory{
 

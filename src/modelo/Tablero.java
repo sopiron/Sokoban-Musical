@@ -50,8 +50,6 @@ public class Tablero {
         estadisticasNivel.registrarUndo();
     }
 
-    //MELANIE
-    // Unificamos la búsqueda. Si encuentra algo (Caja o Pared), lo devuelve. Si está vacío, devuelve null.
     public ElementoInteractuable obtenerElemento(int fila, int columna) {
         for (Caja caja : cajas) {
             if (caja.getPosicion().getFila() == fila && caja.getPosicion().getColumna() == columna && caja.bloquea()) {
@@ -66,7 +64,6 @@ public class Tablero {
         return null; // Casillero libre
     }
 
-    // El movimiento ahora es puro polimorfismo, sin ifs preguntando qué tipo de objeto es.
     public boolean moverJugador(int difFila, int difColumna) {
         if (jugador == null) return false;
 
@@ -75,7 +72,6 @@ public class Tablero {
 
         ElementoInteractuable elementoFrente = obtenerElemento(nuevaFila, nuevaCol);
 
-        // Si no hay nada adelante, el jugador camina tranquilo
         if (elementoFrente == null) {
             historial.guardar(guardarMemento());
             jugador.mover(difFila, difColumna);
@@ -83,10 +79,8 @@ public class Tablero {
             return true;
         }
 
-        // Guardamos el snapshot ANTES de que el elemento (ej: caja) cambie su estado
         TableroMemento snapshotPrevio = guardarMemento();
 
-        // Si hay un elemento, DELEGAMOS la decisión. El elemento interactúa y decide si nos deja pasar.
         if (elementoFrente.interactuar(difFila, difColumna, this)) {
             historial.guardar(snapshotPrevio);
             jugador.mover(difFila, difColumna);
@@ -96,8 +90,6 @@ public class Tablero {
         return false; // El elemento nos bloqueó
     }
 
-
-    // Este método revisa si todas las cajas están paradas exactamente sobre un destino
     public boolean verificarVictoria() {
 
         if (destinos.isEmpty()) {
@@ -140,7 +132,6 @@ public class Tablero {
     //
     //---------------------------------------------------------
 
-    //Este método se llama cuando la caja toca el piso resbaladizo.
     public void iniciarDeslizamiento(Caja caja, int difFila, int difColumna) {
         this.cajaDeslizandose = caja;
         this.difFilaDeslizamiento = difFila;
@@ -173,7 +164,6 @@ public class Tablero {
                 new Posicion(siguienteFila, siguienteColumna)
         );
 
-        // Si llegó a un destino, se queda ahí y deja de deslizar
         if (esDestino(siguienteFila, siguienteColumna)) {
             detenerDeslizamiento();
             return false;
@@ -189,7 +179,6 @@ public class Tablero {
         cajaDeslizandose = null;
     }
 
-    //Ver el tipo de movimiento de la caja
     public MovimientoCaja obtenerMovimientoCaja(int fila, int columna) {
         for (PisoResbaladizo piso : pisosResbaladizos) {
             if (piso.ocupa(fila, columna)) {
